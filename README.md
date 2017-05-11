@@ -1,20 +1,21 @@
-#Introduction 
-TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project. 
+# Sitecore.SBOS.ReferrerUrlParameter (BETA) 
+This is a module 
 
-#Getting Started
-TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
-1.	Installation process
-2.	Software dependencies
-3.	Latest releases
-4.	API references
+## Getting Started
+Below are the steps to get up and running with the module.
 
-#Build and Test
-TODO: Describe and show how to build your code and run the tests. 
+1. Clone the repository.
+2. Open the Solution file in Visual Studio.
+3. Right-click the Project Solution and then click **Restore NuGet Packages** to load all References.
+4. Build the solution to compile all code files.
+5. Publish the compile codes your existing Sitecore Instance. Right-click the project solution and then select **Publish**.
+6. Inside Publish dialog click “Profile” tab select “Custom” to create new custom profile and enter Profile name after click “Next >” Button to continue in connection tab.
+7. Inside Connection tab in the Publish method select “File System” and on Target Location enter your Sitecore Instance then click “Next >” Button to continue in Settings tab.
+8. Inside Settings tab in the Configuration select “Debug” and then click “Next >” Button to continue in Preview tab.
+9. Inside Preview tab set the Dropdown list to the Custom Profile you created and then Click publish to deploy all files inside your Sitecore Instance.
 
-#Contribute
-TODO: Explain how other users and developers can contribute to make your code better. 
+## Supports
++ For support please email the author or [create an issue](https://github.com/raseniero/Sitecore.SBOS.ReferrerUrlParameters/issues/new).
++ Tested on Sitecore CMS 8.2 or later
 
-If you want to learn more about creating good readme files then refer the following [guidelines](https://www.visualstudio.com/en-us/docs/git/create-a-readme). You can also seek inspiration from the below readme files:
-- [ASP.NET Core](https://github.com/aspnet/Home)
-- [Visual Studio Code](https://github.com/Microsoft/vscode)
-- [Chakra Core](https://github.com/Microsoft/ChakraCore)
+THIS MODULE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT SUPPORT, WARRANTIES OR CONDITIONS OF ANY KIND.
