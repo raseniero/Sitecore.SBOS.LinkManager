@@ -1,5 +1,5 @@
 
-# Sitecore.SBOS.ReferrerUrlParameter (BETA) 
+# Sitecore.SBOS.LinkManager (BETA) 
 This is a module 
 
 ## Getting Started
