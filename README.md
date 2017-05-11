@@ -1,5 +1,5 @@
 
-# Sitecore.SBOS.LinkManager (BETA) 
+# Sitecore.SBOS.LinkTracker (BETA) 
 This is a module 
 
 ## Getting Started
