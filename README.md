@@ -1,6 +1,5 @@
-
 # Sitecore.SBOS.LinkTracker (BETA) 
-This is a module 
+This module extends the Link Manager to add a capability to set a link click to trigger a Campaign event. 
 
 ## Getting Started
 Below are the steps to get up and running with the module.
