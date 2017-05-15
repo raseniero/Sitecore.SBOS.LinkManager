@@ -1,4 +1,5 @@
 
+
 Demo
 
 Assumption:
@@ -59,6 +60,7 @@ Click About Habitat(component) in the Content panel right below “Quick Info”
 
 18.Then Let’s Start Testing. Just Click the About Habitat Link which is “Example available on Github” and the Goal dialog will pop out just click “OK”.
 
+![image](https://cloud.githubusercontent.com/assets/2329372/26075887/d45e52b0-396b-11e7-8bc0-8b645fc65e4d.png)
 
 19. To Check if the Goal is really Trigger you can look at the Sitecore Habitat Information Bar in the Right panel of the Site.
 
