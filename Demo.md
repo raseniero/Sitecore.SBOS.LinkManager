@@ -52,7 +52,7 @@ Click About Habitat(component) in the Content panel right below “Quick Info”
 16. After Successfully publishing your changes. To to your Instance example http://Sitecore101/ and in this Demo we are using Sitecore Habitat. You can locate “About Habitat” below Sitecore Habitat Home Page in the footer section.
 
 ![image](https://cloud.githubusercontent.com/assets/2329372/26075900/d5191f78-396b-11e7-86f1-47ca2e6ae547.png)
-![image](https://cloud.githubusercontent.com/assets/2329372/26075885/d4575d70-396b-11e7-9ed3-8cc067a5ffce.png)
+![image](https://cloud.githubusercontent.com/assets/2329372/26075897/d4d74e7c-396b-11e7-9856-9a648eacc017.png)
 
 17. To check if the Teaser Link Button added OnClick in the html structure please use developer tool in Google Chrome F12. use inspect button to inspect the Link.
 
