@@ -38,7 +38,7 @@ Below are the steps to get up and running with the module.
 
 ## Demonstration 
 
-If you want to follow a step-by-step demo please see [Demo page] https://github.com/raseniero/Sitecore.SBOS.LinkManager/blob/master/Demo.md. This is assume that you have Habitat running.
+If you want to follow a step-by-step demo please see [Demo page] (https://github.com/raseniero/Sitecore.SBOS.LinkManager/blob/master/Demo.md). This is assume that you have Habitat running.
 
 ## Supports
 + For support please email the author or [create an issue](https://github.com/raseniero/Sitecore.SBOS.ReferrerUrlParameters/issues/new).
