@@ -40,6 +40,10 @@ Below are the steps to get up and running with the module.
 
 If you want to follow a step-by-step demo please see [Demo page](https://github.com/raseniero/Sitecore.SBOS.LinkManager/blob/master/Demo.md). This is assume that you have Habitat running.
 
+## Package Installation 
+
+Download the package from [here](https://github.com/raseniero/Sitecore.SBOS.LinkManager/blob/master/Sitecore%20Sbos%20Module%20Link%20Manager-v0.2.zip) and install using the Sitecore Installlation Wizard, you can follow the step-by-step instructions [here](https://github.com/raseniero/Sitecore.SBOS.LinkManager/blob/master/PACKAGE-README(v0.2).md). 
+
 ## Supports
 + For support please email the author or [create an issue](https://github.com/raseniero/Sitecore.SBOS.ReferrerUrlParameters/issues/new).
 + Tested on Sitecore CMS 8.2 or later
