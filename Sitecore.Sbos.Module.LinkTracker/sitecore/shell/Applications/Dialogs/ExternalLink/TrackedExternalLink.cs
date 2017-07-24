@@ -2,6 +2,7 @@
 using System.Collections.Specialized;
 using System.Xml;
 using Sitecore.Diagnostics;
+using Sitecore.Sbos.Module.LinkTracker.Data.Constants;
 using Sitecore.Shell.Applications.Dialogs;
 using Sitecore.Shell.Applications.Dialogs.ExternalLink;
 using Sitecore.Web.UI.HtmlControls;
@@ -10,28 +11,29 @@ using Sitecore.Xml;
 
 namespace Sitecore.Sbos.Module.LinkTracker.sitecore.shell.Applications.Dialogs.ExternalLink
 {
-    public class GoalExternalLink : ExternalLinkForm
+    public class TrackedExternalLink : ExternalLinkForm
     {
-        private const string GoalAttributeName = "goal";
-
-        private const string GoalTriggerAttName = "triggergoal";
-
         protected Combobox Goal;
 
         protected Checkbox TriggerGoal;
 
-        private NameValueCollection goalLinkAttributes;
-        protected NameValueCollection GoalLinkAttributes
+        protected Combobox PageEvent;
+
+        protected Checkbox TriggerPageEvent;
+
+        private NameValueCollection analyticsLinkAttributes;
+
+        protected NameValueCollection AnalyticsLinkAttributes
         {
             get
             {
-                if (goalLinkAttributes == null)
+                if (analyticsLinkAttributes == null)
                 {
-                    goalLinkAttributes = new NameValueCollection();
+                    analyticsLinkAttributes = new NameValueCollection();
                     ParseLinkAttributes(GetLink());
                 }
 
-                return goalLinkAttributes;
+                return analyticsLinkAttributes;
             }
         }
 
@@ -45,19 +47,17 @@ namespace Sitecore.Sbos.Module.LinkTracker.sitecore.shell.Applications.Dialogs.E
         {
             Assert.ArgumentNotNull(link, "link");
             XmlDocument xmlDocument = XmlUtil.LoadXml(link);
-            if (xmlDocument == null)
-            {
-                return;
-            }
 
-            XmlNode node = xmlDocument.SelectSingleNode("/link");
+            XmlNode node = xmlDocument?.SelectSingleNode("/link");
             if (node == null)
             {
                 return;
             }
 
-            GoalLinkAttributes[GoalAttributeName] = XmlUtil.GetAttribute(GoalAttributeName, node);
-            GoalLinkAttributes[GoalTriggerAttName] = XmlUtil.GetAttribute(GoalTriggerAttName, node);
+            AnalyticsLinkAttributes[LinkTrackerConstants.GoalAttributeName] = XmlUtil.GetAttribute(LinkTrackerConstants.GoalAttributeName, node);
+            AnalyticsLinkAttributes[LinkTrackerConstants.GoalTriggerAttName] = XmlUtil.GetAttribute(LinkTrackerConstants.GoalTriggerAttName, node);
+            AnalyticsLinkAttributes[LinkTrackerConstants.PageEventAttributeName] = XmlUtil.GetAttribute(LinkTrackerConstants.PageEventAttributeName, node);
+            AnalyticsLinkAttributes[LinkTrackerConstants.PageEventTriggerAttName] = XmlUtil.GetAttribute(LinkTrackerConstants.PageEventTriggerAttName, node);
         }
 
         protected override void OnLoad(EventArgs e)
@@ -74,13 +74,22 @@ namespace Sitecore.Sbos.Module.LinkTracker.sitecore.shell.Applications.Dialogs.E
 
         protected virtual void LoadControls()
         {
-            string goalValue = GoalLinkAttributes[GoalAttributeName];
-            string triggerGoalValue = GoalLinkAttributes[GoalTriggerAttName];
+            string goalValue = AnalyticsLinkAttributes[LinkTrackerConstants.GoalAttributeName];
+            string triggerGoalValue = AnalyticsLinkAttributes[LinkTrackerConstants.GoalTriggerAttName];
 
             if (!string.IsNullOrWhiteSpace(goalValue))
             {
                 Goal.Value = goalValue;
                 TriggerGoal.Value = triggerGoalValue;
+            }
+
+            string pageEventValue = AnalyticsLinkAttributes[LinkTrackerConstants.PageEventAttributeName];
+            string triggerPageEventValue = AnalyticsLinkAttributes[LinkTrackerConstants.PageEventTriggerAttName];
+
+            if (!string.IsNullOrWhiteSpace(pageEventValue))
+            {
+                PageEvent.Value = pageEventValue;
+                TriggerPageEvent.Value = triggerPageEventValue;
             }
         }
 
@@ -90,18 +99,22 @@ namespace Sitecore.Sbos.Module.LinkTracker.sitecore.shell.Applications.Dialogs.E
             Assert.ArgumentNotNull(args, "args");
             string path = GetPath();
             string attributeFromValue = LinkForm.GetLinkTargetAttributeFromValue(Target.Value, CustomTarget.Value);
-            Packet packet = new Packet("link", new string[0]);
-            LinkForm.SetAttribute(packet, "text", (Control)Text);
+            Packet packet = new Packet("link");
+            LinkForm.SetAttribute(packet, "text", Text);
             LinkForm.SetAttribute(packet, "linktype", "external");
             LinkForm.SetAttribute(packet, "url", path);
             LinkForm.SetAttribute(packet, "anchor", string.Empty);
-            LinkForm.SetAttribute(packet, "title", (Control)Title);
-            LinkForm.SetAttribute(packet, "class", (Control)Class);
+            LinkForm.SetAttribute(packet, "title", Title);
+            LinkForm.SetAttribute(packet, "class", Class);
             LinkForm.SetAttribute(packet, "target", attributeFromValue);
 
             TrimComboboxControl(Goal);
-            LinkForm.SetAttribute(packet, GoalTriggerAttName, (Control)TriggerGoal);
-            LinkForm.SetAttribute(packet, GoalAttributeName, (Control)Goal);
+            LinkForm.SetAttribute(packet, LinkTrackerConstants.GoalTriggerAttName, TriggerGoal);
+            LinkForm.SetAttribute(packet, LinkTrackerConstants.GoalAttributeName, Goal);
+
+            TrimComboboxControl(PageEvent);
+            LinkForm.SetAttribute(packet, LinkTrackerConstants.PageEventTriggerAttName, TriggerPageEvent);
+            LinkForm.SetAttribute(packet, LinkTrackerConstants.PageEventAttributeName, PageEvent);
 
             SheerResponse.SetDialogValue(packet.OuterXml);
             SheerResponse.CloseWindow();
@@ -120,7 +133,7 @@ namespace Sitecore.Sbos.Module.LinkTracker.sitecore.shell.Applications.Dialogs.E
 
         protected virtual void TrimComboboxControl(Combobox control)
         {
-            if (control == null || string.IsNullOrEmpty(control.Value))
+            if (string.IsNullOrEmpty(control?.Value))
             {
                 return;
             }
