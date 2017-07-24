@@ -4,8 +4,8 @@
     <FormDialog Header="Insert External Link" Text="Enter the URL for the external website that you want to insert a link to and specify any additional properties for the link." OKButton="Insert">
       <Stylesheet Src="//code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css" />
       <Stylesheet Src="/scripts/css/LinkTracker.css" />
-      <!--<Script type="text/JavaScript" src="https://code.jquery.com/jquery-1.12.4.js" />
-      <Script type="text/JavaScript" src="https://code.jquery.com/ui/1.12.0/jquery-ui.js" />-->
+      <Script type="text/JavaScript" src="https://code.jquery.com/jquery-1.12.4.js" />
+      <Script type="text/JavaScript" src="https://code.jquery.com/ui/1.12.0/jquery-ui.js" />
       <Script type="text/JavaScript" src="/scripts/js/LinkTracker.js" />
       <CodeBeside Type="Sitecore.Sbos.Module.LinkTracker.sitecore.shell.Applications.Dialogs.ExternalLink.TrackedExternalLink, Sitecore.Sbos.Module.LinkTracker"/>
 
