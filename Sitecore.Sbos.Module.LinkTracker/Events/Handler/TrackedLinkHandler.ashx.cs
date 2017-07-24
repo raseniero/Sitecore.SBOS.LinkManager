@@ -1,76 +1,70 @@
 ﻿using System.Web;
-using Sitecore.Analytics;
-using Sitecore.Analytics.Data.Items;
-using Sitecore.Analytics.Model;
-using Sitecore.Data.Items;
-using Sitecore.Diagnostics;
-using System;
 using System.Web.Mvc;
 using System.Web.SessionState;
+using Sitecore.Analytics;
+using Sitecore.Analytics.Data.Items;
+using Sitecore.Data;
+using Sitecore.Data.Items;
+using Sitecore.Analytics.Tracking;
+using System;
 
-namespace Sitecore.Sbos.Module.LinkTracker.Goals.Handler
+namespace Sitecore.Sbos.Module.LinkTracker.Events.Handler
 {
-    /// <summary>
-    /// Summary description for GoalLinkTrackerHandler1
-    /// </summary>
-    public class GoalLinkTrackerHandler1 : IHttpHandler, IRequiresSessionState
+    public class TrackedLinkTrackerHandler : IHttpHandler, IRequiresSessionState
     {
+        public bool IsReusable => false;
+
         [HttpGet]
         public void ProcessRequest(HttpContext context)
-        {                                                                                                                                                                                                   
-            var gid = context.Request.QueryString["gid"];
-            var triggerGoal = context.Request.QueryString["triggerGoal"];
+        {
+            this.HandleQueryStringParameter(context, "triggerGoal", "gid");
+            this.HandleQueryStringParameter(context, "triggerPageEvent", "peid");
+        }
 
-            bool isTriggerGoal = false;
-            bool.TryParse(triggerGoal.ToString(), out isTriggerGoal);
+        private void HandleQueryStringParameter(HttpContext context, string triggerParam, string idParam)
+        {
+            var parameter = context.Request.QueryString[triggerParam];
 
-            if (!string.IsNullOrEmpty(gid.ToString()) && isTriggerGoal)
+            bool shouldTrigger;
+            bool.TryParse(parameter, out shouldTrigger);
+
+            if (shouldTrigger)
             {
-                if (!Tracker.IsActive)
+                var id = context.Request.QueryString[idParam];
+                TriggerEvent(id);
+            }
+        }
+        
+        private void TriggerEvent(string id)
+        {
+            ID scId;
+
+            if (!string.IsNullOrEmpty(id) && ID.TryParse(id, out scId))
+            {
+                if (Tracker.IsActive == false)
                 {
                     Tracker.StartTracking();
                 }
 
-                if (Tracker.IsActive)
+                if (Tracker.Current != null && Tracker.Current.Interaction != null && Tracker.Current.Interaction.PageCount > 0)
                 {
-                    if (Tracker.Current.CurrentPage != null)
+                    Item defItem = Context.Database.GetItem(scId);
+                    var eventToTrigger = new PageEventItem(defItem);
+
+                    IPageContext desiredPage = null;
+
+                    for (int i = Tracker.Current.Interaction.PageCount; i > 0 && desiredPage == null; i--)
                     {
-                        var id = new Sitecore.Data.ID(gid.ToString());
-                        Item goalItem = Context.Database.GetItem(id);
-                        var goalToTrigger = new PageEventItem(goalItem);
-
-                        if (goalToTrigger != null)
+                        var page = Tracker.Current.Interaction.GetPage(i);
+                        if (page.Item != null && Guid.Empty.Equals(page.Item.Id) == false)
                         {
-                            PageEventData eventData = Tracker.Current.CurrentPage.Register(goalToTrigger);
-
-                            Console.WriteLine("Goal is successfully triggered.");
-                        }
-                        else
-                        {
-                            Log.Error("Goal with ID " + gid + " does not exist", this);
+                            desiredPage = page;
                         }
                     }
-                    else
-                    {
-                        Log.Error("Tracker.Current.CurrentPage is null", this);
-                    }
-                }
-                else
-                {
-                    Log.Warn("The tracker is not active. Unable to register the goal.", this);
-                }
-            }
-            else
-            {
-                Log.Warn("There is no goal selected.", this);
-            }
-        }
 
-        public bool IsReusable
-        {
-            get
-            {
-                return false;
+                    desiredPage?.Register(eventToTrigger);
+                    Tracker.Current.CurrentPage.Cancel();
+                }
             }
         }
     }
