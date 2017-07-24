@@ -137,6 +137,7 @@
     <Compile Include="Pipelines\RenderField\SetEventAttributeOnLink.cs" />
     <Compile Include="Pipelines\RenderField\SetGoalAttributeOnLink.cs" />
     <Compile Include="Pipelines\RenderField\SetPageEventAttributeOnLink.cs" />
+    <Compile Include="Pipelines\RenderLayout\InsertHeadControls.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="sitecore\shell\Applications\Dialogs\ExternalLink\TrackedExternalLink.cs" />
   </ItemGroup>
