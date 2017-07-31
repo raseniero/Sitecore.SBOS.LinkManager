@@ -3,17 +3,21 @@
   <ExternalLink>
     <FormDialog Header="Insert External Link" Text="Enter the URL for the external website that you want to insert a link to and specify any additional properties for the link." OKButton="Insert">
       <Stylesheet Src="//code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css" />
-      <Stylesheet Src="/scripts/css/LinkTrackerGoal.css" />
+      <Stylesheet Src="/scripts/css/LinkTracker.css" />
       <Script type="text/JavaScript" src="https://code.jquery.com/jquery-1.12.4.js" />
       <Script type="text/JavaScript" src="https://code.jquery.com/ui/1.12.0/jquery-ui.js" />
-      <Script type="text/JavaScript" src="/scripts/js/LinkTrackerGoal.js" />
-      <CodeBeside Type="Sitecore.Sbos.Module.LinkTracker.sitecore.shell.Applications.Dialogs.ExternalLink.GoalExternalLink, Sitecore.Sbos.Module.LinkTracker"/>
+      <Script type="text/JavaScript" src="/scripts/js/LinkTracker.js" />
+      <CodeBeside Type="Sitecore.Sbos.Module.LinkTracker.sitecore.shell.Applications.Dialogs.ExternalLink.TrackedExternalLink, Sitecore.Sbos.Module.LinkTracker"/>
 
       <GridPanel Class="scFormTable" CellPadding="2" Columns="2" Width="100%">
-        <Label For="Text" GridPanel.NoWrap="true"><Literal Text="Link description:"/></Label>
+        <Label For="Text" GridPanel.NoWrap="true">
+          <Literal Text="Link description:"/>
+        </Label>
         <Edit ID="Text" Width="100%" GridPanel.Width="100%"/>
-        
-        <Label For="Url" GridPanel.NoWrap="true"><Literal Text="URL:"/></Label>
+
+        <Label For="Url" GridPanel.NoWrap="true">
+          <Literal Text="URL:"/>
+        </Label>
         <Border>
           <GridPanel Columns="2" Width="100%">
             <Edit ID="Url" Width="100%" GridPanel.Width="100%" />
@@ -21,33 +25,66 @@
           </GridPanel>
         </Border>
 
-        <Label for="Target" GridPanel.NoWrap="true"><Literal Text="Target window:"/></Label>
+        <Label for="Target" GridPanel.NoWrap="true">
+          <Literal Text="Target window:"/>
+        </Label>
         <Combobox ID="Target" GridPanel.Width="100%" Width="100%" Change="OnListboxChanged">
           <ListItem Value="Self" Header="Active browser"/>
           <ListItem Value="New" Header="New browser"/>
           <ListItem Value="Custom" Header="Custom"/>
         </Combobox>
-        
-        <Panel ID="CustomLabel" Disabled="true" Background="transparent" Border="none" GridPanel.NoWrap="true"><Label For="CustomTarget"><Literal Text="Custom:" /></Label></Panel>
+
+        <Panel ID="CustomLabel" Disabled="true" Background="transparent" Border="none" GridPanel.NoWrap="true">
+          <Label For="CustomTarget">
+            <Literal Text="Custom:" />
+          </Label>
+        </Panel>
         <Edit ID="CustomTarget" Width="100%" Disabled="true"/>
 
-        <Label For="Class" GridPanel.NoWrap="true"><Literal Text="Style class:" /></Label>
+        <Label For="Class" GridPanel.NoWrap="true">
+          <Literal Text="Style class:" />
+        </Label>
         <Edit ID="Class" Width="100%" />
-        
-        <Label for="Title" GridPanel.NoWrap="true"><Literal Text="Alternate text:"/></Label>
+
+        <Label for="Title" GridPanel.NoWrap="true">
+          <Literal Text="Alternate text:"/>
+        </Label>
         <Edit ID="Title" Width="100%" />
-		  
-        <Label for="TriggerGoal" GridPanel.NoWrap="true"><Literal Text="Trigger Goal:"/></Label>
+
+        <Label for="TriggerGoal" GridPanel.NoWrap="true">
+          <Literal Text="Trigger Goal:"/>
+        </Label>
         <Checkbox ID="TriggerGoal" GridPanel.Width="100%" Width="100%" />
-        
+
         <Label for="Goal" GridPanel.NoWrap="true">
           <Literal Text="Goal:"/>
         </Label>
         <Combobox ID="Goal" GridPanel.Width="100%" Width="100%" Change="OnListboxChanged">
         </Combobox>
-		
+
+        <Label For="GoalData" GridPanel.NoWrap="true">
+          <Literal Text="Goal data value:" />
+        </Label>
+        <Edit ID="GoalData" Width="100%" />
+        
+        <Label for="TriggerPageEvent" GridPanel.NoWrap="true">
+          <Literal Text="Trigger Page Event:"/>
+        </Label>
+        <Checkbox ID="TriggerPageEvent" GridPanel.Width="100%" Width="100%" />
+
+        <Label for="PageEvent" GridPanel.NoWrap="true">
+          <Literal Text="Page Event:"/>
+        </Label>
+        <Combobox ID="PageEvent" GridPanel.Width="100%" Width="100%" Change="OnListboxChanged">
+        </Combobox>
+        
+        <Label For="PageEventData" GridPanel.NoWrap="true">
+          <Literal Text="Page Event data value:" />
+        </Label>
+        <Edit ID="PageEventData" Width="100%" />
+
       </GridPanel>
-      
+
     </FormDialog>
   </ExternalLink>
 </control>
