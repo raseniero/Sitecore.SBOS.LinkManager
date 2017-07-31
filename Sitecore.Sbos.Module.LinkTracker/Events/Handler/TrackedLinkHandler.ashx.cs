@@ -7,6 +7,7 @@ using Sitecore.Data;
 using Sitecore.Data.Items;
 using Sitecore.Analytics.Tracking;
 using System;
+using Sitecore.Analytics.Data;
 
 namespace Sitecore.Sbos.Module.LinkTracker.Events.Handler
 {
@@ -17,11 +18,11 @@ namespace Sitecore.Sbos.Module.LinkTracker.Events.Handler
         [HttpGet]
         public void ProcessRequest(HttpContext context)
         {
-            this.HandleQueryStringParameter(context, "triggerGoal", "gid");
-            this.HandleQueryStringParameter(context, "triggerPageEvent", "peid");
+            this.HandleQueryStringParameter(context, "triggerGoal", "gid", "goalData");
+            this.HandleQueryStringParameter(context, "triggerPageEvent", "peid", "pageEventData");
         }
 
-        private void HandleQueryStringParameter(HttpContext context, string triggerParam, string idParam)
+        private void HandleQueryStringParameter(HttpContext context, string triggerParam, string idParam, string dataParam)
         {
             var parameter = context.Request.QueryString[triggerParam];
 
@@ -31,11 +32,12 @@ namespace Sitecore.Sbos.Module.LinkTracker.Events.Handler
             if (shouldTrigger)
             {
                 var id = context.Request.QueryString[idParam];
-                TriggerEvent(id);
+                var data = context.Request.QueryString[dataParam];
+                this.TriggerEvent(id, data);
             }
         }
         
-        private void TriggerEvent(string id)
+        private void TriggerEvent(string id, string data)
         {
             ID scId;
 
@@ -49,8 +51,10 @@ namespace Sitecore.Sbos.Module.LinkTracker.Events.Handler
                 if (Tracker.Current != null && Tracker.Current.Interaction != null && Tracker.Current.Interaction.PageCount > 0)
                 {
                     Item defItem = Context.Database.GetItem(scId);
-                    var eventToTrigger = new PageEventItem(defItem);
-
+                    var eventToTrigger = new PageEventData(defItem.Name, scId.Guid)
+                    {
+                        Data = data
+                    };
                     IPageContext desiredPage = null;
 
                     for (int i = Tracker.Current.Interaction.PageCount; i > 0 && desiredPage == null; i--)
@@ -63,6 +67,7 @@ namespace Sitecore.Sbos.Module.LinkTracker.Events.Handler
                     }
 
                     desiredPage?.Register(eventToTrigger);
+                    
                     Tracker.Current.CurrentPage.Cancel();
                 }
             }

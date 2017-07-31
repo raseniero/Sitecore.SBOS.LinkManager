@@ -22,9 +22,13 @@ namespace Sitecore.Sbos.Module.LinkTracker.Data.Constants
 
         public const string GoalTriggerAttName = "triggergoal";
 
+        public const string GoalDataAttName = "goaldata";
+
         public const string PageEventAttributeName = "pageevent";
 
         public const string PageEventTriggerAttName = "triggerpageevent";
+
+        public const string PageEventDataAttName = "pageeventdata";
 
         public static readonly ID GoalTemplateId = new ID("{475E9026-333F-432D-A4DC-52E03B75CB6B}");
 

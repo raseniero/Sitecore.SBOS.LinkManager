@@ -7,25 +7,23 @@ namespace Sitecore.Sbos.Module.LinkTracker.Pipelines.RenderField
     {
         public override void Process(RenderFieldArgs args)
         {
-            if (!CanProcess(args))
+            if (!this.CanProcess(args))
             {
                 return;
             }
 
             string shouldTriggerGoal;
 
-            if (!string.IsNullOrEmpty(GetXmlAttributeValue(args.FieldValue, LinkTrackerConstants.GoalTriggerAttName)))
+            if (!string.IsNullOrEmpty(this.GetXmlAttributeValue(args.FieldValue, LinkTrackerConstants.GoalTriggerAttName)))
             {
-                shouldTriggerGoal = GetXmlAttributeValue(args.FieldValue, LinkTrackerConstants.GoalTriggerAttName) == "1" ? "true" : "false";
+                shouldTriggerGoal = this.GetXmlAttributeValue(args.FieldValue, LinkTrackerConstants.GoalTriggerAttName) == "1" ? "true" : "false";
             }
             else
             {
                 shouldTriggerGoal = "false";
             }
-
-            args.Result.FirstPart = AddOrExtendAttributeValue(args.Result.FirstPart, AttributeName, GetXmlAttributeValue(args.FieldValue, XmlAttributeName));
-            args.Result.FirstPart = AddOrExtendAttributeValue(args.Result.FirstPart, LinkTrackerConstants.GoalTriggerAttName, shouldTriggerGoal);
-            args.Result.FirstPart = AddOrExtendAttributeValue(args.Result.FirstPart, "onclick", "triggerGoal('" + GetXmlAttributeValue(args.FieldValue, XmlAttributeName) + "', '" + shouldTriggerGoal + "');");
+            
+            args.Result.FirstPart = this.AddOrExtendAttributeValue(args.Result.FirstPart, "onclick", "triggerGoal('" + this.GetXmlAttributeValue(args.FieldValue, this.XmlAttributeName) + "', '" + shouldTriggerGoal + "', '" + this.GetXmlAttributeValue(args.FieldValue, LinkTrackerConstants.GoalDataAttName) + "');");
         }
     }
 }

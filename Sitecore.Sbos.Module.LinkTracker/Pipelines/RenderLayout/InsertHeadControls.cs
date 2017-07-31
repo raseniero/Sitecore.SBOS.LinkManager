@@ -6,7 +6,7 @@ namespace Sitecore.Sbos.Module.LinkTracker.Pipelines.RenderLayout
     {
         public override void Process(RenderRenderingArgs args)
         {
-            if (Sitecore.Context.Site.Name == "shell")
+            if (Context.Site.Name == "shell")
             {
                 return;
             }

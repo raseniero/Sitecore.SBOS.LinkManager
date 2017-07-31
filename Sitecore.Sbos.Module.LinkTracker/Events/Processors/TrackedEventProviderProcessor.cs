@@ -16,9 +16,9 @@ namespace Sitecore.Sbos.Module.LinkTracker.Events.Processors
 
         public void Process(PipelineArgs args)
         {
-            var defItems = GetDefinitionItems();
+            var defItems = this.GetDefinitionItems();
 
-            string webRooPath = GetWebRootPath("Sitecore.Sbos.Module.LinkTracker");
+            string webRooPath = this.GetWebRootPath("Sitecore.Sbos.Module.LinkTracker");
 
             if (!string.IsNullOrEmpty(webRooPath))
             {
@@ -30,7 +30,7 @@ namespace Sitecore.Sbos.Module.LinkTracker.Events.Processors
 
                     if (nodeList.Count > 1)
                     {
-                        XmlElement goalElement = (XmlElement) nodeList[Index];
+                        XmlElement goalElement = (XmlElement) nodeList[this.Index];
                         goalElement.IsEmpty = true;
 
                         XmlElement listItemEmpty = xdoc.CreateElement("ListItem");
@@ -63,8 +63,8 @@ namespace Sitecore.Sbos.Module.LinkTracker.Events.Processors
         private List<Item> GetDefinitionItems()
         {
             var context = Configuration.Factory.GetDatabase("master");
-            Item item = context.SelectSingleItem(DefinitionItemPath);
-            List<Item> items = item.Axes.GetDescendants().Where(x => x.TemplateID.Equals(TemplateId)).ToList();
+            Item item = context.SelectSingleItem(this.DefinitionItemPath);
+            List<Item> items = item.Axes.GetDescendants().Where(x => x.TemplateID.Equals(this.TemplateId)).ToList();
             return items;
         }
 

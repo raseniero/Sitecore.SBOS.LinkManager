@@ -62,6 +62,11 @@
         <Combobox ID="Goal" GridPanel.Width="100%" Width="100%" Change="OnListboxChanged">
         </Combobox>
 
+        <Label For="GoalData" GridPanel.NoWrap="true">
+          <Literal Text="Goal data value:" />
+        </Label>
+        <Edit ID="GoalData" Width="100%" />
+        
         <Label for="TriggerPageEvent" GridPanel.NoWrap="true">
           <Literal Text="Trigger Page Event:"/>
         </Label>
@@ -72,6 +77,11 @@
         </Label>
         <Combobox ID="PageEvent" GridPanel.Width="100%" Width="100%" Change="OnListboxChanged">
         </Combobox>
+        
+        <Label For="PageEventData" GridPanel.NoWrap="true">
+          <Literal Text="Page Event data value:" />
+        </Label>
+        <Edit ID="PageEventData" Width="100%" />
 
       </GridPanel>
 

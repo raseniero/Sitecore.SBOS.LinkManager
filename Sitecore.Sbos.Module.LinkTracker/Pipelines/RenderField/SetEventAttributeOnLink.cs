@@ -17,19 +17,19 @@ namespace Sitecore.Sbos.Module.LinkTracker.Pipelines.RenderField
 
         protected virtual bool CanProcess(RenderFieldArgs args)
         {
-            return !string.IsNullOrWhiteSpace(AttributeName)
-                   && !string.IsNullOrWhiteSpace(BeginningHtml)
-                   && !string.IsNullOrWhiteSpace(XmlAttributeName)
+            return !string.IsNullOrWhiteSpace(this.AttributeName)
+                   && !string.IsNullOrWhiteSpace(this.BeginningHtml)
+                   && !string.IsNullOrWhiteSpace(this.XmlAttributeName)
                    && args != null
                    && args.Result != null
-                   && HasXmlAttributeValue(args.FieldValue, AttributeName)
+                   && this.HasXmlAttributeValue(args.FieldValue, this.AttributeName)
                    && !string.IsNullOrWhiteSpace(args.Result.FirstPart)
-                   && args.Result.FirstPart.ToLower().StartsWith(BeginningHtml.ToLower());
+                   && args.Result.FirstPart.ToLower().StartsWith(this.BeginningHtml.ToLower());
         }
 
         protected virtual bool HasXmlAttributeValue(string linkXml, string attributeName)
         {
-            return !string.IsNullOrWhiteSpace(GetXmlAttributeValue(linkXml, attributeName));
+            return !string.IsNullOrWhiteSpace(this.GetXmlAttributeValue(linkXml, attributeName));
         }
 
         protected virtual string GetXmlAttributeValue(string linkXml, string attributeName)

@@ -17,50 +17,38 @@ namespace Sitecore.Sbos.Module.LinkTracker.Data.Fields
 
         public string Goal
         {
-            get
-            {
-                return GetAttribute(LinkTrackerConstants.GoalAttributeName);
-            }
-            set
-            {
-                this.SetAttribute(LinkTrackerConstants.GoalAttributeName, value);
-            }
+            get => this.GetAttribute(LinkTrackerConstants.GoalAttributeName);
+            set => this.SetAttribute(LinkTrackerConstants.GoalAttributeName, value);
         }
 
         public string TriggerGoal
         {
-            get
-            {
-                return GetAttribute(LinkTrackerConstants.GoalTriggerAttName);
-            }
-            set
-            {
-                this.SetAttribute(LinkTrackerConstants.GoalTriggerAttName, value);
-            }
+            get => this.GetAttribute(LinkTrackerConstants.GoalTriggerAttName);
+            set => this.SetAttribute(LinkTrackerConstants.GoalTriggerAttName, value);
+        }
+
+        public string GoalData
+        {
+            get => this.GetAttribute(LinkTrackerConstants.GoalDataAttName);
+            set => this.SetAttribute(LinkTrackerConstants.GoalDataAttName, value);
         }
 
         public string PageEvent
         {
-            get
-            {
-                return GetAttribute(LinkTrackerConstants.PageEventAttributeName);
-            }
-            set
-            {
-                this.SetAttribute(LinkTrackerConstants.PageEventAttributeName, value);
-            }
+            get => this.GetAttribute(LinkTrackerConstants.PageEventAttributeName);
+            set => this.SetAttribute(LinkTrackerConstants.PageEventAttributeName, value);
         }
 
-        public string TriggerEvent
+        public string TriggerPageEvent
         {
-            get
-            {
-                return GetAttribute(LinkTrackerConstants.PageEventTriggerAttName);
-            }
-            set
-            {
-                this.SetAttribute(LinkTrackerConstants.PageEventTriggerAttName, value);
-            }
+            get => this.GetAttribute(LinkTrackerConstants.PageEventTriggerAttName);
+            set => this.SetAttribute(LinkTrackerConstants.PageEventTriggerAttName, value);
+        }
+
+        public string PageEventData
+        {
+            get => this.GetAttribute(LinkTrackerConstants.PageEventDataAttName);
+            set => this.SetAttribute(LinkTrackerConstants.PageEventDataAttName, value);
         }
     }
 }
