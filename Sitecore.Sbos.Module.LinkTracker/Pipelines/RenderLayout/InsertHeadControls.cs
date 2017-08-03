@@ -1,11 +1,4 @@
-﻿using Sitecore.Mvc.Pipelines.Response.GetPageRendering;
-using Sitecore.Mvc.Pipelines.Response.RenderRendering;
-using Sitecore.Mvc.Presentation;
-using Sitecore.Pipelines.InsertRenderings;
-using Sitecore.Web;
-using System.Web.UI;
-using System.Web.UI.HtmlControls;
-using System.Xml;
+﻿using Sitecore.Mvc.Pipelines.Response.RenderRendering;
 
 namespace Sitecore.Sbos.Module.LinkTracker.Pipelines.RenderLayout
 {
@@ -13,7 +6,7 @@ namespace Sitecore.Sbos.Module.LinkTracker.Pipelines.RenderLayout
     {
         public override void Process(RenderRenderingArgs args)
         {
-            if (Sitecore.Context.Site.Name == "shell")
+            if (Context.Site.Name == "shell")
             {
                 return;
             }
@@ -24,7 +17,7 @@ namespace Sitecore.Sbos.Module.LinkTracker.Pipelines.RenderLayout
                 {
                     args.Writer.WriteLine(Data.Constants.LinkTrackerConstants.JQueryScript);
                     args.Writer.WriteLine(Data.Constants.LinkTrackerConstants.LinkTrackerMgrScript);
-                }             
+                }
             }
         }
     }
