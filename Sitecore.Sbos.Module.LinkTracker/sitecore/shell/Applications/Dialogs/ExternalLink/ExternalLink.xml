@@ -82,6 +82,23 @@
           <Literal Text="Page Event data value:" />
         </Label>
         <Edit ID="PageEventData" Width="100%" />
+        
+        <Label for="TriggerCampaign" GridPanel.NoWrap="true">
+          <Literal Text="Trigger Campaign:"/>
+        </Label>
+        <Checkbox ID="TriggerCampaign" GridPanel.Width="100%" Width="100%" />
+
+        <Label for="Campaign" GridPanel.NoWrap="true">
+          <Literal Text="Campaign:"/>
+        </Label>
+        <Combobox ID="Campaign" GridPanel.Width="100%" Width="100%" Change="OnListboxChanged">
+        </Combobox>
+
+        <Label For="CampaignData" GridPanel.NoWrap="true">
+          <Literal Text="Campaign data value:" />
+        </Label>
+        <Edit ID="CampaignData" Width="100%" />
+
 
       </GridPanel>
 

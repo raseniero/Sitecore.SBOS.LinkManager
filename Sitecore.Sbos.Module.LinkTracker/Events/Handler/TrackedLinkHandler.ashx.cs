@@ -14,10 +14,12 @@ namespace Sitecore.Sbos.Module.LinkTracker.Events.Handler
     public class TrackedLinkHandler : IHttpHandler, IRequiresSessionState
     {
         public bool IsReusable => false;
+        public bool campaigncheck = false;
 
         [HttpGet]
         public void ProcessRequest(HttpContext context)
         {
+            this.HandleQueryStringParameter(context, "triggerCampaign", "cid", "campaignData");
             this.HandleQueryStringParameter(context, "triggerGoal", "gid", "goalData");
             this.HandleQueryStringParameter(context, "triggerPageEvent", "peid", "pageEventData");
         }
@@ -25,18 +27,35 @@ namespace Sitecore.Sbos.Module.LinkTracker.Events.Handler
         private void HandleQueryStringParameter(HttpContext context, string triggerParam, string idParam, string dataParam)
         {
             var parameter = context.Request.QueryString[triggerParam];
-
-            bool shouldTrigger;
-            bool.TryParse(parameter, out shouldTrigger);
-
-            if (shouldTrigger)
+            if (parameter != null)
             {
-                var id = context.Request.QueryString[idParam];
-                var data = context.Request.QueryString[dataParam];
-                this.TriggerEvent(id, data);
+                bool shouldTrigger;
+                bool.TryParse(parameter, out shouldTrigger);
+
+                
+                if(triggerParam != "triggerCampaign")
+                {
+                    if (shouldTrigger)
+                    {
+                        var id = context.Request.QueryString[idParam];
+                        var data = context.Request.QueryString[dataParam];
+                        this.TriggerEvent(id, data);
+                    }
+                }
+                if(triggerParam == "triggerCampaign")
+                {
+                    if (shouldTrigger)
+                    {
+                        var cid = context.Request.QueryString[idParam];
+                        var cdata = context.Request.QueryString[dataParam];
+                        this.TriggerCampaign(cid, cdata);
+                    }
+
+                }
             }
+
         }
-        
+
         private void TriggerEvent(string id, string data)
         {
             ID scId;
@@ -44,33 +63,41 @@ namespace Sitecore.Sbos.Module.LinkTracker.Events.Handler
             if (!string.IsNullOrEmpty(id) && ID.TryParse(id, out scId))
             {
                 if (Tracker.IsActive == false)
-                {
-                    Tracker.StartTracking();
+                {                    
+                    Tracker.StartTracking();               
                 }
-
-                if (Tracker.Current != null && Tracker.Current.Interaction != null && Tracker.Current.Interaction.PageCount > 0)
+                if (Tracker.Current.CurrentPage != null && Tracker.Current.Interaction != null)
                 {
-                    Item defItem = Context.Database.GetItem(scId);
-                    var eventToTrigger = new PageEventData(defItem.Name, scId.Guid)
-                    {
-                        Data = data
-                    };
-                    IPageContext desiredPage = null;
 
-                    for (int i = Tracker.Current.Interaction.PageCount; i > 0 && desiredPage == null; i--)
-                    {
-                        var page = Tracker.Current.Interaction.GetPage(i);
-                        if (page.Item != null && Guid.Empty.Equals(page.Item.Id) == false)
+                        //PageEvent
+                        Item defItem = Context.Database.GetItem(scId);
+                        var eventToTrigger = new PageEventData(defItem.Name, scId.Guid)
                         {
-                            desiredPage = page;
-                        }
-                    }
-
-                    desiredPage?.Register(eventToTrigger);
-                    
-                    Tracker.Current.CurrentPage.Cancel();
+                            Data = data
+                        };
+                        Tracker.Current.CurrentPage.Register(eventToTrigger);
                 }
             }
         }
+
+         private void TriggerCampaign(string cid, string cdata)
+         {
+             ID scId;
+
+             if (!string.IsNullOrEmpty(cid) && ID.TryParse(cid, out scId))
+             {
+                 if (Tracker.IsActive == false)
+                 {
+                    Tracker.StartTracking();
+                 }
+
+                 if (Tracker.Current.CurrentPage != null && Tracker.Current.Interaction != null)
+                 {                     
+                     Item campaignItem = Context.Database.GetItem(cid);
+                     CampaignItem campaignToTrigger = new CampaignItem(campaignItem);
+                     Tracker.Current.CurrentPage.TriggerCampaign(campaignToTrigger);
+                }
+             }
+         }       
     }
 }

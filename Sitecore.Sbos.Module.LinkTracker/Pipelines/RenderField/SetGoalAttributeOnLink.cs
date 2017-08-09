@@ -22,8 +22,10 @@ namespace Sitecore.Sbos.Module.LinkTracker.Pipelines.RenderField
             {
                 shouldTriggerGoal = "false";
             }
-            
-            args.Result.FirstPart = this.AddOrExtendAttributeValue(args.Result.FirstPart, "onclick", "triggerGoal('" + this.GetXmlAttributeValue(args.FieldValue, this.XmlAttributeName) + "', '" + shouldTriggerGoal + "', '" + this.GetXmlAttributeValue(args.FieldValue, LinkTrackerConstants.GoalDataAttName) + "');");
+            if(shouldTriggerGoal == "true")
+            {
+                args.Result.FirstPart = this.AddOrExtendAttributeValue(args.Result.FirstPart, "onclick", "triggerGoal('" + this.GetXmlAttributeValue(args.FieldValue, this.XmlAttributeName) + "', '" + shouldTriggerGoal + "', '" + this.GetXmlAttributeValue(args.FieldValue, LinkTrackerConstants.GoalDataAttName) + "');");
+            }           
         }
     }
 }

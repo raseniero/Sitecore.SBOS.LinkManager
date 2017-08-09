@@ -130,4 +130,5 @@ $( function() {
 
     $("#Goal").combobox();
     $("#PageEvent").combobox();
+    $("#Campaign").combobox();
 });

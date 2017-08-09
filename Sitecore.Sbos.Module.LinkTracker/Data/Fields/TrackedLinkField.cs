@@ -58,5 +58,23 @@ namespace Sitecore.Sbos.Module.LinkTracker.Data.Fields
             get { return this.GetAttribute(LinkTrackerConstants.PageEventDataAttName); }
             set { this.SetAttribute(LinkTrackerConstants.PageEventDataAttName, value); }
         }
+
+        public string Campaign
+        {
+            get { return this.GetAttribute(LinkTrackerConstants.CampaignAttributeName); }
+            set { this.SetAttribute(LinkTrackerConstants.CampaignAttributeName, value); }
+        }
+
+        public string TriggerCampaign
+        {
+            get { return this.GetAttribute(LinkTrackerConstants.CampaignTriggerAttName); }
+            set { this.SetAttribute(LinkTrackerConstants.CampaignTriggerAttName, value); }
+        }
+
+        public string CampaignData
+        {     
+            get { return this.GetAttribute(LinkTrackerConstants.CampaignDataAttName); }
+            set { this.SetAttribute(LinkTrackerConstants.CampaignDataAttName, value); }
+        }
     }
 }

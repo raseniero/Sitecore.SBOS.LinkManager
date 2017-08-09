@@ -1,4 +1,4 @@
-﻿var triggerCount = 0; GoalCheck = "", PageEventCheck = "", popupCheck = 0;
+﻿var triggerCount = 0; GoalCheck = "", PageEventCheck = "", CampaignCheck = "", popupCheck = 0;
 
 function triggerGoal(goalId, shouldTriggerGoal, goalData) {
     $.ajax({
@@ -7,9 +7,11 @@ function triggerGoal(goalId, shouldTriggerGoal, goalData) {
         data: { gid: goalId, triggerGoal: shouldTriggerGoal, goalData },
         context: this,
         success: function (data) {
-            GoalCheck = shouldTriggerGoal;
+            /*GoalCheck = shouldTriggerGoal;
             triggerCount++;
             TriggeredEventOnClick();
+            alert("Goal is triggered", data);
+            */
         },
         error: function (data) {
             alert("Goal is not been triggered", data);
@@ -24,9 +26,12 @@ function triggerPageEvent(pageEventId, shouldTriggerPageEvent, pageEventData) {
         data: { peid: pageEventId, triggerPageEvent: shouldTriggerPageEvent, pageEventData },
         context: this,
         success: function (data) {           
-            PageEventCheck = shouldTriggerPageEvent;
+            /*PageEventCheck = shouldTriggerPageEvent;
             triggerCount++;
             TriggeredEventOnClick();
+            alert("PageEvent is triggered", data);
+            */
+
         },
         error: function (data) {
             alert("PageEvent is not been triggered", data);
@@ -34,10 +39,33 @@ function triggerPageEvent(pageEventId, shouldTriggerPageEvent, pageEventData) {
     });
 }
 
+function triggerCampaign(campaignId, shouldTriggerCampaign, campaignData) {
+    $.ajax({
+        url: "/Events/Handler/TrackedLinkHandler.ashx",
+        type: "GET",
+        data: { cid: campaignId, triggerCampaign: shouldTriggerCampaign, campaignData },
+        context: this,
+        success: function (data) {
+            /*CampaignCheck = shouldTriggerCampaign;
+            triggerCount++;
+            TriggeredEventOnClick();
+            alert("Campaign is triggered", data);
+            */
+            if(shouldTriggerCampaign == "true")
+            {
+                alert("Campaign is triggered", data);
+            }
+        },
+        error: function (data) {
+            alert("Campaign is not been triggered", data);
+        }
+    });
+}
+/*
 function TriggeredEventOnClick() {
     var msg = "";
     
-    if ((GoalCheck != "" && PageEventCheck != "") && popupCheck == 1) {
+    if ((GoalCheck != "" && PageEventCheck != "" && CampaignCheck != "") && popupCheck == 1) {
         popupCheck = 0;
     }
 
@@ -46,15 +74,19 @@ function TriggeredEventOnClick() {
             msg += "Goal ";
         }
 
-        if (PageEventCheck == "true" && GoalCheck == "true") {
-            msg += "and ";
-        }
-
         if (PageEventCheck == "true") {
             msg += "PageEvent ";
         }
 
-        if (PageEventCheck == "true" && GoalCheck == "true") {
+        if (CampaignCheck == "true") {
+            msg += "Campaign ";
+        }
+
+        if (PageEventCheck == "true" && GoalCheck == "true" && CampaignCheck == "true") {
+            msg += "and ";
+        }
+
+        if (PageEventCheck == "true" && GoalCheck == "true" && CampaignCheck == "true") {
             msg += "are ";
         } else {
             msg += "is ";
@@ -62,7 +94,7 @@ function TriggeredEventOnClick() {
 
         msg += "Triggered";
 
-        if (PageEventCheck == "false" && GoalCheck == "false")
+        if (PageEventCheck == "false" && GoalCheck == "false" && CampaignCheck == "false")
             popupCheck = 1;
 
         if(popupCheck == 0)
@@ -72,6 +104,8 @@ function TriggeredEventOnClick() {
 
         GoalCheck = "";
         PageEventCheck = "";
+        CampaignCheck = "";
         triggerCount = 0;
     }
 }
+*/

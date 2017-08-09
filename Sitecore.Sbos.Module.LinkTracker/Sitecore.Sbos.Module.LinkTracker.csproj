@@ -134,9 +134,11 @@
     <Compile Include="Events\Handler\TrackedLinkHandler.ashx.cs">
       <DependentUpon>TrackedLinkHandler.ashx</DependentUpon>
     </Compile>
+    <Compile Include="Events\Processors\CampaignProvider.cs" />
     <Compile Include="Events\Processors\GoalProvider.cs" />
     <Compile Include="Events\Processors\PageEventProvider.cs" />
     <Compile Include="Events\Processors\TrackedEventProviderProcessor.cs" />
+    <Compile Include="Pipelines\RenderField\SetCampaignAttributeOnLink.cs" />
     <Compile Include="Pipelines\RenderField\SetTrackedAttributeOnLink.cs" />
     <Compile Include="Pipelines\RenderField\SetGoalAttributeOnLink.cs" />
     <Compile Include="Pipelines\RenderField\SetPageEventAttributeOnLink.cs" />

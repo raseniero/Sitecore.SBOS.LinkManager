@@ -24,6 +24,12 @@ namespace Sitecore.Sbos.Module.LinkTracker.sitecore.shell.Applications.Dialogs.E
         protected Checkbox TriggerPageEvent;
 
         protected Edit PageEventData;
+
+        protected Combobox Campaign;
+
+        protected Checkbox TriggerCampaign;
+
+        protected Edit CampaignData;
         
         private NameValueCollection analyticsLinkAttributes;
 
@@ -64,6 +70,9 @@ namespace Sitecore.Sbos.Module.LinkTracker.sitecore.shell.Applications.Dialogs.E
             this.AnalyticsLinkAttributes[LinkTrackerConstants.PageEventAttributeName] = XmlUtil.GetAttribute(LinkTrackerConstants.PageEventAttributeName, node);
             this.AnalyticsLinkAttributes[LinkTrackerConstants.PageEventTriggerAttName] = XmlUtil.GetAttribute(LinkTrackerConstants.PageEventTriggerAttName, node);
             this.AnalyticsLinkAttributes[LinkTrackerConstants.PageEventDataAttName] = XmlUtil.GetAttribute(LinkTrackerConstants.PageEventDataAttName, node);
+            this.AnalyticsLinkAttributes[LinkTrackerConstants.CampaignAttributeName] = XmlUtil.GetAttribute(LinkTrackerConstants.CampaignAttributeName, node);
+            this.AnalyticsLinkAttributes[LinkTrackerConstants.CampaignTriggerAttName] = XmlUtil.GetAttribute(LinkTrackerConstants.CampaignTriggerAttName, node);
+            this.AnalyticsLinkAttributes[LinkTrackerConstants.CampaignDataAttName] = XmlUtil.GetAttribute(LinkTrackerConstants.CampaignDataAttName, node);
         }
 
         protected override void OnLoad(EventArgs e)
@@ -101,6 +110,17 @@ namespace Sitecore.Sbos.Module.LinkTracker.sitecore.shell.Applications.Dialogs.E
                 this.TriggerPageEvent.Value = triggerPageEventValue;
                 this.PageEventData.Value = pageEventDataValue;
             }
+
+            string campaignValue = this.AnalyticsLinkAttributes[LinkTrackerConstants.CampaignAttributeName];
+            string campaignTriggerValue = this.AnalyticsLinkAttributes[LinkTrackerConstants.CampaignTriggerAttName];
+            string campaignDataValue = this.AnalyticsLinkAttributes[LinkTrackerConstants.CampaignDataAttName];
+
+            if (!string.IsNullOrWhiteSpace(campaignValue))
+            {
+                this.Campaign.Value = campaignValue;
+                this.TriggerCampaign.Value = campaignTriggerValue;
+                this.CampaignData.Value = campaignDataValue;
+            }
         }
 
         protected override void OnOK(object sender, EventArgs args)
@@ -122,12 +142,16 @@ namespace Sitecore.Sbos.Module.LinkTracker.sitecore.shell.Applications.Dialogs.E
             LinkForm.SetAttribute(packet, LinkTrackerConstants.GoalTriggerAttName, this.TriggerGoal);
             LinkForm.SetAttribute(packet, LinkTrackerConstants.GoalAttributeName, this.Goal);
             LinkForm.SetAttribute(packet, LinkTrackerConstants.GoalDataAttName, this.GoalData);
-
-
+    
             this.TrimComboboxControl(this.PageEvent);
             LinkForm.SetAttribute(packet, LinkTrackerConstants.PageEventTriggerAttName, this.TriggerPageEvent);
             LinkForm.SetAttribute(packet, LinkTrackerConstants.PageEventAttributeName, this.PageEvent);
             LinkForm.SetAttribute(packet, LinkTrackerConstants.PageEventDataAttName, this.PageEventData);
+
+            this.TrimComboboxControl(this.Campaign);
+            LinkForm.SetAttribute(packet, LinkTrackerConstants.CampaignTriggerAttName, this.TriggerCampaign);
+            LinkForm.SetAttribute(packet, LinkTrackerConstants.CampaignAttributeName, this.Campaign);
+            LinkForm.SetAttribute(packet, LinkTrackerConstants.CampaignDataAttName, this.CampaignData);
 
             SheerResponse.SetDialogValue(packet.OuterXml);
             SheerResponse.CloseWindow();
