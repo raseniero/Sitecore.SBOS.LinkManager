@@ -15,61 +15,59 @@ Steps:
 
 3. In Sitecore Desktop Click “Sitecore Icon” and then select Content Editor
 
-![image](https://cloud.githubusercontent.com/assets/2329372/26075893/d48daed4-396b-11e7-89c8-30397cdb69f3.png)
+![image]()
 
 4. In Sitecore Content tree in the left panel click on **sitecore/content/Habitat/Global/Teasers**. 
 5. Since we are using Sitecore Habitat and Link Manager only work with external link we need to access Global where Teasers folder is located.
 
-![image](https://cloud.githubusercontent.com/assets/2329372/26075895/d4aad1e4-396b-11e7-80fc-fd9ed4987092.png)
+![image]()
 
 6. Inside Teasers folder are Teaser component which is using external link in their content.
 Click About Habitat(component) in the Content panel right below **Quick Info** click **Content** and scroll down look for **Teaser Link** and on Teaser Link kindly click **Insert external link**.
 
-![image](https://cloud.githubusercontent.com/assets/2329372/26075890/d484b81a-396b-11e7-8db5-cb68f2542717.png)
+![image]()
 
-![image](https://cloud.githubusercontent.com/assets/2329372/26075961/ffcfea8a-396b-11e7-8024-e37433499533.png)
+![image]()
 
-7. Inside **Insert External Link** dialog in the bottom part you can see we added Trigger Goal using a CheckBox and also Goal using ComboBox.
-8. Trigger Goal: if you Check ✔ the checkBox it will trigger **True** and if not it will trigger **False**. If True you want to trigger the goal; If False you don't want to trigger the goal.
-9. Goal: The comboBox create a list of Goals and it also uses a javascript that allows the user to **AutoComplete**.
-10. If you click **Insert** it will create a **OnClick** from About Habitat Link.
-11. In this Image example I triggered the Goal  by checking the CheckBox ✔ and Select a Goal name **Brochures Request** and click **Insert**.
+7. Inside “Insert External Link” dialog in the bottom part you can see we added Trigger Goal, Trigger Page Event, and Trigger Campaign using a CheckBox and also List of Goal, Page Event, and Campaign using ComboBox.
+8.Trigger Goal: if you Check ✔ the checkBox it will trigger “True” and if not it will trigger “False”. If True you want to trigger the goal; If False you don't want to trigger the goal.
+Goal: The comboBox create a list of Goals and it also uses a javascript that allows the user to “AutoComplete”.
+9.Page Event:if you Check ✔ the checkBox it will trigger “True” and if not it will trigger “False”. If True you want to trigger the goal; If False you don't want to trigger the Page Event.
+10.Campaign: if you Check ✔ the checkBox it will trigger “True” and if not it will trigger “False”. If True you want to trigger the goal; If False you don't want to trigger the Campaign.
+11.If you click “Insert” it will create a “OnClick” from About Habitat Link.
+In this Image example I triggered the Goal, Page Event, Campaign  by checking the CheckBox ✔ and Select a Goal name **Brochures Request**, Page Event name **Begin Transaction**, and lastly Campaign name **Register Page** and click **Insert**.
 
-![image](https://cloud.githubusercontent.com/assets/2329372/26075891/d486b426-396b-11e7-9dda-3dbf73b64a1b.png)
+![image]()
 
 12. After click **Insert** in Insert External Link. Click **Save** to save the changes. And Click Publish to publish the changes you made from the **Web**.
 
-![image](https://cloud.githubusercontent.com/assets/2329372/26075889/d4809c26-396b-11e7-8dd3-4e428a56f267.png)
+![image]()
 
 13. After clicking Publish button select **Publish Item** to publish the item you changes and the Publish dialog will pop out.
 
-![image](https://cloud.githubusercontent.com/assets/2329372/26075903/d59924d4-396b-11e7-8e43-8ab3c4452c3e.png)
+![image]()
 
 14. In the **Publishing** select **Smart publish** and check ✔ the Publish subitems and Publish related items and then click **Publish** Button and click Yes.
 15. After Publishing you will see a dialog box that indicates the item you publish and since I just update 1 Item only.
 16. After Successfully publishing your changes. To to your Instance example http://Sitecore101/ and in this Demo we are using Sitecore Habitat. You can locate **About Habitat** below Sitecore Habitat Home Page in the footer section.
 
-![image](https://cloud.githubusercontent.com/assets/2329372/26075900/d5191f78-396b-11e7-86f1-47ca2e6ae547.png)
-![image](https://cloud.githubusercontent.com/assets/2329372/26075897/d4d74e7c-396b-11e7-9856-9a648eacc017.png)
+![image]()
+![image]()
 
 17. To check if the Teaser Link Button added OnClick in the html structure please use developer tool in Google Chrome F12. use inspect button to inspect the Link.
 
-![image](https://cloud.githubusercontent.com/assets/2329372/26075892/d488aaba-396b-11e7-9537-3ea55aac54dd.png)
+![image]()
 
-18.Then Let’s Start Testing. Just Click the About Habitat Link which is **Example available on Github** and the Goal dialog will pop out just click **OK**.
+19. To Check if the Goal, Page Event, and Campaign is really Trigger you can look at the Sitecore Habitat Information Bar in the Right panel of the Site.
 
-![image](https://cloud.githubusercontent.com/assets/2329372/26075887/d45e52b0-396b-11e7-8bc0-8b645fc65e4d.png)
-
-19. To Check if the Goal is really Trigger you can look at the Sitecore Habitat Information Bar in the Right panel of the Site.
-
-![image](https://cloud.githubusercontent.com/assets/2329372/26075885/d4575d70-396b-11e7-9ed3-8cc067a5ffce.png)
+![image]()
 
 20. After clicking the Information Bar just click **Refresh** and Click **Onsite Behavior**.
 
-![image](https://cloud.githubusercontent.com/assets/2329372/26075896/d4b1e0a6-396b-11e7-8688-b8a8c73572d5.png)
+![image]()
 
-21. You can check the Triggered goals in Onsite Behavior. Since we triggered **Brochures Request in the Sitecore Client** it will list here in the Triggered goals.
+21. You can check the Triggered goals, page event you can check it at in Sitecore Habitat Onsite Behavior and if you triggered campaign you can check it at in Referrer. Since we triggered Goal, Page event and Campaign this will register in Interaction.
 
-![image](https://cloud.githubusercontent.com/assets/2329372/26075888/d478b7a4-396b-11e7-9a9e-86384715d6d6.png)
+![image]()
 
 22. End
