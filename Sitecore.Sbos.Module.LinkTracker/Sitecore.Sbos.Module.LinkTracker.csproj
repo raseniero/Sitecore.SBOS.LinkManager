@@ -24,6 +24,7 @@
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
     <TargetFrameworkProfile />
+    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -136,6 +137,7 @@
     </Compile>
     <Compile Include="Events\Processors\CampaignProvider.cs" />
     <Compile Include="Events\Processors\GoalProvider.cs" />
+    <Compile Include="Events\Processors\LoadControl.cs" />
     <Compile Include="Events\Processors\PageEventProvider.cs" />
     <Compile Include="Events\Processors\TrackedEventProviderProcessor.cs" />
     <Compile Include="Pipelines\RenderField\SetCampaignAttributeOnLink.cs" />
@@ -155,6 +157,7 @@
     <None Include="Properties\PublishProfiles\CTE.pubxml">
       <SubType>Designer</SubType>
     </None>
+    <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
     <None Include="Properties\PublishProfiles\Local Publish.pubxml" />
   </ItemGroup>
   <ItemGroup />
