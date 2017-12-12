@@ -87,18 +87,13 @@ namespace Sitecore.Sbos.Module.LinkTracker.sitecore.shell.Applications.Dialogs.E
             {
                 return;
             }
-            /*
+            
             if (Context.ClientPage.IsPostBack)
             {
                 reload();
             }
-            else
-            {
-                reload();
-            }
-            */
-
-            reload();
+        
+            //reload();
             LoadControls();
         }
 
