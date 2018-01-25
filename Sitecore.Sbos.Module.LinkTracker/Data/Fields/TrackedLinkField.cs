@@ -16,23 +16,23 @@ namespace Sitecore.Sbos.Module.LinkTracker.Data.Fields
         }
 
         public string Goal
-        {  
+        {
             get
-                {
-                    return this.GetAttribute(LinkTrackerConstants.GoalAttributeName);
-                }
+            {
+                return this.GetAttribute(LinkTrackerConstants.GoalAttributeName);
+            }
             set
-                {
-                    this.SetAttribute(LinkTrackerConstants.GoalAttributeName, value);
-                }          
+            {
+                this.SetAttribute(LinkTrackerConstants.GoalAttributeName, value);
+            }
         }
 
         public string TriggerGoal
         {
-            
+
             get { return this.GetAttribute(LinkTrackerConstants.GoalTriggerAttName); }
             set { this.SetAttribute(LinkTrackerConstants.GoalTriggerAttName, value); }
-           
+
         }
 
         public string GoalData
@@ -72,9 +72,27 @@ namespace Sitecore.Sbos.Module.LinkTracker.Data.Fields
         }
 
         public string CampaignData
-        {     
+        {
             get { return this.GetAttribute(LinkTrackerConstants.CampaignDataAttName); }
             set { this.SetAttribute(LinkTrackerConstants.CampaignDataAttName, value); }
+        }
+
+        public string GTM
+        {
+            get { return this.GetAttribute(LinkTrackerConstants.GTMAttributeName); }
+            set { this.SetAttribute(LinkTrackerConstants.GTMAttributeName, value); }
+        }
+
+        public string GTMEvents
+        {
+            get { return this.GetAttribute(LinkTrackerConstants.GTMEventAttName); }
+            set { this.SetAttribute(LinkTrackerConstants.GTMEventAttName, value); }
+        }
+
+        public string TriggerGTM
+        {
+            get { return this.GetAttribute(LinkTrackerConstants.GTMTriggerAttName); }
+            set { this.SetAttribute(LinkTrackerConstants.GTMTriggerAttName, value); }
         }
     }
 }

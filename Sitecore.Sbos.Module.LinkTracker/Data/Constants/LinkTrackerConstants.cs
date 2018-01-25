@@ -1,4 +1,5 @@
 ﻿using Sitecore.Data;
+using System.Collections.Generic;
 
 namespace Sitecore.Sbos.Module.LinkTracker.Data.Constants
 {
@@ -13,6 +14,8 @@ namespace Sitecore.Sbos.Module.LinkTracker.Data.Constants
         public const string SitecorePageEventPath = "/sitecore/system/Settings/Analytics/Page Events";
 
         public const string SitecoreCampaignPath = "/sitecore/system/Marketing Control Panel/Campaigns";
+
+        public const string SitecoreGTM = "/sitecore/system/Settings/Analytics/Page Events/Google Tag Manager";
 
         public const string JQueryScript = "<script src='https://code.jquery.com/jquery-1.12.4.js' type='text/javascript' language='Javascript'></script>";
 
@@ -37,6 +40,12 @@ namespace Sitecore.Sbos.Module.LinkTracker.Data.Constants
         public const string CampaignTriggerAttName = "triggercampaign";
 
         public const string CampaignDataAttName = "campaigndata";
+
+        public const string GTMAttributeName = "gtm";
+
+        public const string GTMTriggerAttName = "triggergtm";
+
+        public const string GTMEventAttName = "gtmevents";
 
         public static readonly ID GoalTemplateId = new ID("{475E9026-333F-432D-A4DC-52E03B75CB6B}");
 

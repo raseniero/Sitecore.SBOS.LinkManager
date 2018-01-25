@@ -17,6 +17,7 @@ namespace Sitecore.Sbos.Module.LinkTracker.sitecore.shell.Applications.Dialogs.E
 {
     public class TrackedExternalLink : ExternalLinkForm
     {
+
         protected Combobox Goal;
 
         protected Checkbox TriggerGoal;
@@ -34,7 +35,17 @@ namespace Sitecore.Sbos.Module.LinkTracker.sitecore.shell.Applications.Dialogs.E
         protected Checkbox TriggerCampaign;
 
         protected Edit CampaignData;
-       
+
+        protected Checkbox TriggerGTM;
+
+        protected Listbox GTM;
+
+        protected Listbox GTMEvents;
+
+        protected Button TestGTM;
+
+        string gtmValueItem;
+
         private NameValueCollection analyticsLinkAttributes;
 
         protected NameValueCollection AnalyticsLinkAttributes
@@ -77,10 +88,17 @@ namespace Sitecore.Sbos.Module.LinkTracker.sitecore.shell.Applications.Dialogs.E
             this.AnalyticsLinkAttributes[LinkTrackerConstants.CampaignAttributeName] = XmlUtil.GetAttribute(LinkTrackerConstants.CampaignAttributeName, node);
             this.AnalyticsLinkAttributes[LinkTrackerConstants.CampaignTriggerAttName] = XmlUtil.GetAttribute(LinkTrackerConstants.CampaignTriggerAttName, node);
             this.AnalyticsLinkAttributes[LinkTrackerConstants.CampaignDataAttName] = XmlUtil.GetAttribute(LinkTrackerConstants.CampaignDataAttName, node);
+
+            this.AnalyticsLinkAttributes[LinkTrackerConstants.GTMAttributeName] = XmlUtil.GetAttribute(LinkTrackerConstants.GTMAttributeName, node);
+            this.AnalyticsLinkAttributes[LinkTrackerConstants.GTMTriggerAttName] = XmlUtil.GetAttribute(LinkTrackerConstants.GTMTriggerAttName, node);
+            this.AnalyticsLinkAttributes[LinkTrackerConstants.GTMEventAttName] = XmlUtil.GetAttribute(LinkTrackerConstants.GTMEventAttName, node);
         }
 
         protected override void OnLoad(EventArgs e)
         {
+            LoadControls();
+            Update_GTMEvents();
+            Update_GTM();
             Assert.ArgumentNotNull(e, "e");
             base.OnLoad(e);
             if (Context.ClientPage.IsEvent)
@@ -88,13 +106,14 @@ namespace Sitecore.Sbos.Module.LinkTracker.sitecore.shell.Applications.Dialogs.E
                 return;
             }
             
-            if (Context.ClientPage.IsPostBack)
+            if (!Context.ClientPage.IsPostBack)
             {
-                reload();
+                //reload();
+                //Update_Listbox();
             }
-        
-            //reload();
-            LoadControls();
+            //LoadControls();
+            
+            //TestGTM.OnClick += new EventHandler(Button_Click);
         }
 
         public List<Item> GetDefinitionItems(string path, string tempId)
@@ -114,10 +133,14 @@ namespace Sitecore.Sbos.Module.LinkTracker.sitecore.shell.Applications.Dialogs.E
             PathElement[2] = "/sitecore/system/Settings/Analytics/Page Events";
             PathElement[3] = "/sitecore/system/Marketing Control Panel/Campaigns";
 
+            PathElement[4] = "/sitecore/system/Settings/Analytics/Page Events/Google Tag Manager";
+
             string[] TempId = new string[4];
             TempId[1] = "{475E9026-333F-432D-A4DC-52E03B75CB6B}";
             TempId[2] = "{059CFBDF-49FC-4F14-A4E5-B63E1E1AFB1E}";
             TempId[3] = "{94FD1606-139E-46EE-86FF-BC5BF3C79804}";
+
+            TempId[4] = "{059CFBDF-49FC-4F14-A4E5-B63E1E1AFB1E}";
 
             for (int i = 1; i <= 3; i++)
             {
@@ -125,9 +148,11 @@ namespace Sitecore.Sbos.Module.LinkTracker.sitecore.shell.Applications.Dialogs.E
 
                 if(ItemsOn != null)
                 { 
-                    XmlDocument xdoc = new XmlDocument();
-                    xdoc.Load(webRooPath + Data.Constants.LinkTrackerConstants.ExternalFormPath);
-                    XmlNodeList nodeList = xdoc.GetElementsByTagName("Combobox");
+                    if(i != 4)
+                    { 
+                        XmlDocument xdoc = new XmlDocument();
+                        xdoc.Load(webRooPath + Data.Constants.LinkTrackerConstants.ExternalFormPath);
+                        XmlNodeList nodeList = xdoc.GetElementsByTagName("Combobox");
               
                         if (nodeList.Count > 1)
                         {
@@ -147,11 +172,38 @@ namespace Sitecore.Sbos.Module.LinkTracker.sitecore.shell.Applications.Dialogs.E
 
                                 ElementList.AppendChild(listItem);
                             }
-                     xdoc.Save(webRooPath + Data.Constants.LinkTrackerConstants.ExternalFormPath);
+                            xdoc.Save(webRooPath + Data.Constants.LinkTrackerConstants.ExternalFormPath);
+                        }
+                    }
+                    else
+                    {
+                        XmlDocument xdoc = new XmlDocument();
+                        xdoc.Load(webRooPath + Data.Constants.LinkTrackerConstants.ExternalFormPath);
+                        XmlNodeList nodeList = xdoc.GetElementsByTagName("Listbox");
+
+                        XmlElement gtmElement = (XmlElement)nodeList[0];
+                        gtmElement.IsEmpty = true;
+
+
+                        foreach (var item in ItemsOn)
+                        {
+                            var itemName = item.DisplayName;
+                            var itemId = item.ID;
+                            XmlElement ListItem = xdoc.CreateElement("ListItem");
+
+                            ListItem.SetAttribute("Value", itemId.ToString());
+                            ListItem.SetAttribute("Header", itemName);
+                            ListItem.RemoveAttribute("xmlns");
+
+                            gtmElement.AppendChild(ListItem);
+
+                        }
+                        xdoc.Save(webRooPath + Data.Constants.LinkTrackerConstants.ExternalFormPath);
                     }
                 }
             }
         }
+
 
         private string GetWebRootPath(string assembly)
         {
@@ -169,6 +221,9 @@ namespace Sitecore.Sbos.Module.LinkTracker.sitecore.shell.Applications.Dialogs.E
 
             return string.Empty;
         }
+
+        public int dblClickCount = 0;
+        public string dblClickValue = "";
 
         protected virtual void LoadControls()
         {
@@ -204,6 +259,177 @@ namespace Sitecore.Sbos.Module.LinkTracker.sitecore.shell.Applications.Dialogs.E
                 this.TriggerCampaign.Value = campaignTriggerValue;
                 this.CampaignData.Value = campaignDataValue;
             }
+
+            string gtmValue = this.AnalyticsLinkAttributes[LinkTrackerConstants.GTMAttributeName];
+            string gtmTriggerValue = this.AnalyticsLinkAttributes[LinkTrackerConstants.GTMTriggerAttName];
+            string gtmEvent = this.AnalyticsLinkAttributes[LinkTrackerConstants.GTMEventAttName];
+
+            this.GTM.Value = gtmValue;
+            this.TriggerGTM.Value = gtmTriggerValue;
+            this.GTMEvents.Value = gtmEvent;
+
+        }
+
+        public void Update_GTMEvents()
+        {
+            string[] SplitGTMEvents = this.GTMEvents.Value.Split(',');
+
+            foreach (var item in SplitGTMEvents)
+            {
+                var gtmEventItem = GTM.Items.Where(x => x.Value.Equals(item));
+                if (gtmEventItem.Count() > 0)
+                {
+                    this.GTMEvents.Controls.Add(gtmEventItem.First());
+                }
+            }
+            foreach (var controlItem in this.GTMEvents.Items)
+            {
+                this.GTM.Controls.Remove(controlItem);
+            }
+        }
+
+        public void Update_GTM()
+        {
+            string[] SplitGTM = this.GTM.Value.Split(',');
+
+            foreach (var item in SplitGTM)
+            {
+                var gtmItem = GTMEvents.Items.Where(x => x.Value.Equals(item));
+                if (gtmItem.Count() > 0)
+                {
+                    this.GTM.Controls.Add(gtmItem.First());
+                }
+            }
+            foreach (var controlItem in this.GTM.Items)
+            {
+                this.GTMEvents.Controls.Remove(controlItem);
+            }
+        }
+
+        //public void ListBox_SelectedIndexChanged(object sender, EventArgs e)
+        //{
+
+        //    for(int i = 0; i < GTM.Items.Count(); i++)
+        //    {
+        //        if (GTM.SelectedItem.Value.Equals(GTM.Items[i].Value))
+        //        {
+        //            this.GTMEvents.Controls.Add(GTM.Items[i]);
+        //        }     
+        //    }            
+        //}
+        //public void Button_Click(object sender, EventArgs e)
+        //{
+
+        //    for (int i = 0; i < GTM.Items.Count(); i++)
+        //    {
+        //        if (GTM.SelectedItem.Value.Equals(GTM.Items[i].Value))
+        //        {
+        //            this.GTMEvents.Controls.Add(GTM.Items[i]);
+        //        }
+        //    }
+        //}
+
+        //public void clickme()
+        //{
+        //    for (int i = 0; i < GTM.Items.Count(); i++)
+        //    {
+        //        if (GTM.SelectedItem.Value.Equals(GTM.Items[i].Value))
+        //        {
+                    
+        //            this.GTMEvents.Controls.Add(GTM.Items[i]);
+        //            if (string.IsNullOrEmpty(this.GTMEvents.Value))
+        //            {
+        //                this.GTMEvents.Value = gtmValueItem;
+        //            }
+        //            else
+        //            {
+        //                this.GTMEvents.Value += "," + gtmValueItem;
+
+        //            }
+        //        }
+        //    }
+        //    //foreach (var yControlItem in this.GTMEvents.Items)
+        //    //{
+        //    //    this.GTM.Controls.Remove(yControlItem);
+        //    //}
+        //}
+        public void GTM_ClickItem()
+        {
+            if(this.GTM.Items.Count() < 1)
+            {
+                SheerResponse.Alert("GTM Selected Value: Empty");
+            }
+            else
+            { 
+                SheerResponse.Alert("GTM Selected Value: " + this.GTM.SelectedItem.Header.ToString());
+            }
+        }
+        public void GTMEvents_ClickItem()
+        {
+            if (this.GTMEvents.Items.Count() < 1)
+            {
+                SheerResponse.Alert("GTMEvents Selected Value: Empty");
+            }
+            else
+            {
+                SheerResponse.Alert("GTMEvents Selected Value: " + this.GTMEvents.SelectedItem.Header.ToString());
+            }
+        }
+        protected virtual void TryLang()
+        {
+           
+            if (GTMEvents.Items.Count() == 0)
+            {
+                GTMEvents.Value = string.Empty;
+            }
+            string gtmValueItem = this.GTM.SelectedItem.Value;
+
+            for (int ycounter = 0; ycounter < GTM.Items.Count(); ycounter++)
+            {
+
+                if (gtmValueItem == this.GTM.Items[ycounter].Value)
+                {
+                    SheerResponse.Alert("Add from events: " + this.GTM.Items[ycounter].Header);
+                    this.GTMEvents.Controls.Add(GTM.Items[ycounter]);
+                    if (string.IsNullOrEmpty(this.GTMEvents.Value))
+                    {
+                        this.GTMEvents.Value = gtmValueItem;
+                    }
+                    else
+                    {
+                        this.GTMEvents.Value += "," + gtmValueItem;
+                    }
+                }
+            }
+
+        }
+        protected virtual void TryLang2()
+        {
+            if (GTM.Items.Count() == 0)
+            {
+                GTM.Value = string.Empty;
+            }
+
+            string gtmEventsValueItem = this.GTMEvents.SelectedItem.Value;
+
+            for (int xcounter = 0; xcounter < GTMEvents.Items.Count(); xcounter++)
+            {
+                SheerResponse.Alert("Remove form events:" + this.GTMEvents.Items[xcounter].Header);
+                if (gtmEventsValueItem == this.GTMEvents.Items[xcounter].Value)
+                {
+                    this.GTM.Controls.Add(GTMEvents.Items[xcounter]);
+                    if (string.IsNullOrEmpty(this.GTM.Value))
+                    {
+                        this.GTM.Value = gtmEventsValueItem;
+                    }
+                    else
+                    {
+                        this.GTM.Value += "," + gtmEventsValueItem;
+                    }
+
+                }
+            }
+
         }
 
         protected override void OnOK(object sender, EventArgs args)
@@ -220,6 +446,25 @@ namespace Sitecore.Sbos.Module.LinkTracker.sitecore.shell.Applications.Dialogs.E
             LinkForm.SetAttribute(packet, "title", this.Title);
             LinkForm.SetAttribute(packet, "class", this.Class);
             LinkForm.SetAttribute(packet, "target", attributeFromValue);
+
+            if(GTM.Items.Count() > 0)
+            {   
+                TryLang();
+            }
+            if(GTMEvents.Items.Count() > 0)
+            {
+                TryLang2();
+            }
+
+            //GTM
+            LinkForm.SetAttribute(packet, LinkTrackerConstants.GTMTriggerAttName, this.TriggerGTM);
+
+            this.TrimListboxControl(this.GTM);
+            LinkForm.SetAttribute(packet, LinkTrackerConstants.GTMAttributeName, this.GTM);
+
+            this.TrimListboxControl(this.GTMEvents);
+            LinkForm.SetAttribute(packet, LinkTrackerConstants.GTMEventAttName, this.GTMEvents);
+            //GTM - END
 
             this.TrimComboboxControl(this.Goal);
             LinkForm.SetAttribute(packet, LinkTrackerConstants.GoalTriggerAttName, this.TriggerGoal);
@@ -252,6 +497,25 @@ namespace Sitecore.Sbos.Module.LinkTracker.sitecore.shell.Applications.Dialogs.E
         }
 
         protected virtual void TrimComboboxControl(Combobox control)
+        {
+            if (string.IsNullOrEmpty(control?.Value))
+            {
+                return;
+            }
+
+            control.Value = control.Value.Trim();
+        }
+
+        protected virtual void TrimListboxControl(Listbox control)
+        {
+            if (string.IsNullOrEmpty(control?.Value))
+            {
+                return;
+            }
+
+            control.Value = control.Value.Trim();
+        }
+        protected virtual void TrimGTMControl(Checkbox control)
         {
             if (string.IsNullOrEmpty(control?.Value))
             {

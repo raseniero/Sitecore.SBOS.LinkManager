@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Web.UI.WebControls;
 using System.Xml;
+using System.Xml.Linq;
 using Sitecore.Data;
 using Sitecore.Data.Items;
 using Sitecore.Pipelines;
@@ -17,42 +19,73 @@ namespace Sitecore.Sbos.Module.LinkTracker.Events.Processors
         public void Process(PipelineArgs args)
         {
             var defItems = this.GetDefinitionItems();
-
             string webRooPath = this.GetWebRootPath("Sitecore.Sbos.Module.LinkTracker");
+
 
             if (!string.IsNullOrEmpty(webRooPath))
             {
-                if (defItems != null)
-                {
-                    XmlDocument xdoc = new XmlDocument();
-                    xdoc.Load(webRooPath + Data.Constants.LinkTrackerConstants.ExternalFormPath);
-                    XmlNodeList nodeList = xdoc.GetElementsByTagName("Combobox");
-
-                    if (nodeList.Count > 1)
+                if(Index != 4)
+                { 
+                    if (defItems != null)
                     {
-                        XmlElement goalElement = (XmlElement) nodeList[this.Index];
-                        goalElement.IsEmpty = true;
+                        XmlDocument xdoc = new XmlDocument();
+                        xdoc.Load(webRooPath + Data.Constants.LinkTrackerConstants.ExternalFormPath);
+                        XmlNodeList nodeList = xdoc.GetElementsByTagName("Combobox");
 
-                        XmlElement listItemEmpty = xdoc.CreateElement("ListItem");
+                        if (nodeList.Count > 1)
+                        {
+                            XmlElement goalElement = (XmlElement)nodeList[this.Index];
+                            goalElement.IsEmpty = true;
 
-                        listItemEmpty.SetAttribute("Value", string.Empty);
-                        listItemEmpty.SetAttribute("Header", string.Empty);
-                        listItemEmpty.RemoveAttribute("xmlns");
+                            XmlElement listItemEmpty = xdoc.CreateElement("ListItem");
 
-                        goalElement.AppendChild(listItemEmpty);
+                            listItemEmpty.SetAttribute("Value", string.Empty);
+                            listItemEmpty.SetAttribute("Header", string.Empty);
+                            listItemEmpty.RemoveAttribute("xmlns");
+
+                            goalElement.AppendChild(listItemEmpty);
+
+                            foreach (var item in defItems)
+                            {
+                                var itemName = item.DisplayName;
+                                var itemId = item.ID;
+
+                                XmlElement listItem = xdoc.CreateElement("ListItem");
+
+                                listItem.SetAttribute("Value", itemId.ToString());
+                                listItem.SetAttribute("Header", itemName);
+                                listItem.RemoveAttribute("xmlns");
+
+                                goalElement.AppendChild(listItem);
+                            }
+                            xdoc.Save(webRooPath + Data.Constants.LinkTrackerConstants.ExternalFormPath);
+                        }
+                    }
+                }
+                if (Index == 4)
+                { 
+                    if (defItems != null)
+                    {
+                        XmlDocument xdoc = new XmlDocument();
+                        xdoc.Load(webRooPath + Data.Constants.LinkTrackerConstants.ExternalFormPath);
+                        XmlNodeList nodeList = xdoc.GetElementsByTagName("Listbox");
+
+                        XmlElement gtmElement = (XmlElement)nodeList[0];
+                        gtmElement.IsEmpty = true;
+
 
                         foreach (var item in defItems)
                         {
                             var itemName = item.DisplayName;
                             var itemId = item.ID;
+                            XmlElement ListItem = xdoc.CreateElement("ListItem");
 
-                            XmlElement listItem = xdoc.CreateElement("ListItem");
+                            ListItem.SetAttribute("Value", itemId.ToString());
+                            ListItem.SetAttribute("Header", itemName);
+                            ListItem.RemoveAttribute("xmlns");
 
-                            listItem.SetAttribute("Value", itemId.ToString());
-                            listItem.SetAttribute("Header", itemName);
-                            listItem.RemoveAttribute("xmlns");
-
-                            goalElement.AppendChild(listItem);
+                            gtmElement.AppendChild(ListItem);
+    
                         }
                         xdoc.Save(webRooPath + Data.Constants.LinkTrackerConstants.ExternalFormPath);
                     }
