@@ -96,7 +96,7 @@ namespace Sitecore.Sbos.Module.LinkTracker.sitecore.shell.Applications.Dialogs.E
 
         protected override void OnLoad(EventArgs e)
         {
-            LoadControls();
+            GTM_LoadControls();
             Update_GTMEvents();
             Update_GTM();
             Assert.ArgumentNotNull(e, "e");
@@ -111,9 +111,8 @@ namespace Sitecore.Sbos.Module.LinkTracker.sitecore.shell.Applications.Dialogs.E
                 //reload();
                 //Update_Listbox();
             }
-            //LoadControls();
-            
-            //TestGTM.OnClick += new EventHandler(Button_Click);
+            LoadControls();
+
         }
 
         public List<Item> GetDefinitionItems(string path, string tempId)
@@ -260,6 +259,10 @@ namespace Sitecore.Sbos.Module.LinkTracker.sitecore.shell.Applications.Dialogs.E
                 this.CampaignData.Value = campaignDataValue;
             }
 
+        }
+
+        public void GTM_LoadControls()
+        {
             string gtmValue = this.AnalyticsLinkAttributes[LinkTrackerConstants.GTMAttributeName];
             string gtmTriggerValue = this.AnalyticsLinkAttributes[LinkTrackerConstants.GTMTriggerAttName];
             string gtmEvent = this.AnalyticsLinkAttributes[LinkTrackerConstants.GTMEventAttName];
@@ -267,7 +270,6 @@ namespace Sitecore.Sbos.Module.LinkTracker.sitecore.shell.Applications.Dialogs.E
             this.GTM.Value = gtmValue;
             this.TriggerGTM.Value = gtmTriggerValue;
             this.GTMEvents.Value = gtmEvent;
-
         }
 
         public void Update_GTMEvents()
@@ -360,7 +362,7 @@ namespace Sitecore.Sbos.Module.LinkTracker.sitecore.shell.Applications.Dialogs.E
                 SheerResponse.Alert("GTM Selected Value: Empty");
             }
             else
-            { 
+            {
                 SheerResponse.Alert("GTM Selected Value: " + this.GTM.SelectedItem.Header.ToString());
             }
         }
@@ -453,7 +455,7 @@ namespace Sitecore.Sbos.Module.LinkTracker.sitecore.shell.Applications.Dialogs.E
             }
             if(GTMEvents.Items.Count() > 0)
             {
-                TryLang2();
+                //TryLang2();
             }
 
             //GTM
