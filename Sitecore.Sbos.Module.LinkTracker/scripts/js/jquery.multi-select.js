@@ -546,14 +546,17 @@
 $(document).ready(function () { $('.pre-selected-options').multiSelect(); });
 
 $(document).ready(function () {
+    
     var firstListBox = "#GTM";
     var secondListBox = ".GTMEvents";
     $(firstListBox).on("dblclick", function () {
         transfer(secondListBox, $(this).find("option:selected"));
+        setGTMCookie();
     });
 
     $(secondListBox).on("dblclick", function () {
         transfer(firstListBox, $(this).find("option:selected"));
+        setGTMCookie();
     });
 
     function transfer(id, elem) {
@@ -561,4 +564,49 @@ $(document).ready(function () {
         $(id).append(elem);
         $(secondListBox + " option").first().attr('selected', 'selected');
     }
+
+    function setGTMCookie() {
+        var cGTM = "GTMValue=";
+        var cGTMEvents = "GTMEventsValue=";
+        var cGTMValue = "";
+        var cGTMEventsValue = "";
+
+        var gtmOptions = $("#GTM option");
+        var gtmEventsOptions = $("#GTMEvents option");
+        console.log(gtmOptions);
+        console.log(gtmEventsOptions);
+        if (gtmOptions.length > 0) {
+            $("#GTM option").each(function () {
+                var optionValue = $(this).attr("value");
+                if (cGTMValue == "") {
+                    cGTMValue = optionValue;
+                } else {
+                    cGTMValue += "," + optionValue;
+                }
+            });
+
+            cGTM += cGTMValue;
+            console.log(cGTM);
+        }
+
+        if (gtmEventsOptions.length > 0) {
+            $("#GTMEvents option").each(function () {
+                var optionValue = $(this).attr("value");
+                if (cGTMEventsValue == "") {
+                    cGTMEventsValue = optionValue;
+                } else {
+                    cGTMEventsValue += "," + optionValue;
+                }
+            });
+
+            cGTMEvents += cGTMEventsValue;
+            console.log(cGTMEvents);
+        }
+
+        document.cookie = cGTM;
+        document.cookie = cGTMEvents;
+    }
+
+    setGTMCookie();
 });
+

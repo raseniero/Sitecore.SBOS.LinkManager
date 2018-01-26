@@ -112,13 +112,13 @@
         <select class="pre-selected-options" multiple="multiple">
         </select>
         -->
-        <Listbox ID="GTM" Multiple="false" size="10" Click="GTM_ClickItem" AutoPostBack="true">
+        <Listbox ID="GTM" Multiple="false" size="10" AutoPostBack="true">
                    
         </Listbox>
         
          <!--<Button id="TestGTM" Header="TestGTM" Style="margin-left: 10px;" Click="Button_Click" />-->
           
-        <Listbox ID="GTMEvents" Class="GTMEvents" Multiple="false" size="10" Click="GTMEvents_ClickItem">
+        <Listbox ID="GTMEvents" Class="GTMEvents" Multiple="false" size="10">
           
         </Listbox>
         <!--CMG MultiList-->

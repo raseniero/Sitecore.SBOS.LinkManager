@@ -33,7 +33,7 @@ namespace Sitecore.Sbos.Module.LinkTracker.Pipelines.RenderField
 
             if(shouldTriggerGTM == "true")
             {
-                args.Result.FirstPart = this.AddOrExtendAttributeValue(args.Result.FirstPart, "onclick", "triggerGTM('" + this.GetXmlAttributeValue(args.FieldValue, this.XmlAttributeName) + "', '" + shouldTriggerGTM + "', '" + this.GetXmlAttributeValue(args.FieldValue, LinkTrackerConstants.GTMAttributeName) + "',  '" + gtm[0].Fields["EventData"].ToString() + "');");
+                args.Result.FirstPart = this.AddOrExtendAttributeValue(args.Result.FirstPart, "onclick", "triggerGTM('" + this.GetXmlAttributeValue(args.FieldValue, this.XmlAttributeName) + "', '" + shouldTriggerGTM + "', '" + this.GetXmlAttributeValue(args.FieldValue, LinkTrackerConstants.GTMEventAttName) + "',  '" + gtm[0].Fields["EventData"].ToString() + "');");
             }           
         }
         public void LoadGTM()

@@ -12,6 +12,7 @@ using System.Reflection;
 using Sitecore.Data.Items;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web;
 
 namespace Sitecore.Sbos.Module.LinkTracker.sitecore.shell.Applications.Dialogs.ExternalLink
 {
@@ -96,22 +97,28 @@ namespace Sitecore.Sbos.Module.LinkTracker.sitecore.shell.Applications.Dialogs.E
 
         protected override void OnLoad(EventArgs e)
         {
-            GTM_LoadControls();
-            Update_GTMEvents();
-            Update_GTM();
+
+            //Update_GTMEvents();
+            //Update_GTM();
+
             Assert.ArgumentNotNull(e, "e");
             base.OnLoad(e);
             if (Context.ClientPage.IsEvent)
             {
                 return;
             }
-            
-            if (!Context.ClientPage.IsPostBack)
-            {
-                //reload();
-                //Update_Listbox();
-            }
+
+            //if (!Context.ClientPage.IsPostBack)
+            //{
+                //Update_GTMEvents();
+                //Update_GTM();
+            //}
             LoadControls();
+            GTM_LoadControls();
+            //GTM.Action = "0";
+            //GTMEvents.Action = "0";
+            Update_GTMEvents();
+            //Update_GTM();
 
         }
 
@@ -258,7 +265,6 @@ namespace Sitecore.Sbos.Module.LinkTracker.sitecore.shell.Applications.Dialogs.E
                 this.TriggerCampaign.Value = campaignTriggerValue;
                 this.CampaignData.Value = campaignDataValue;
             }
-
         }
 
         public void GTM_LoadControls()
@@ -308,101 +314,174 @@ namespace Sitecore.Sbos.Module.LinkTracker.sitecore.shell.Applications.Dialogs.E
             }
         }
 
-        //public void ListBox_SelectedIndexChanged(object sender, EventArgs e)
+        //public void GTM_ClickItem()
         //{
-
-        //    for(int i = 0; i < GTM.Items.Count(); i++)
+        //    if(this.GTM.Items.Count() < 1)
         //    {
-        //        if (GTM.SelectedItem.Value.Equals(GTM.Items[i].Value))
-        //        {
-        //            this.GTMEvents.Controls.Add(GTM.Items[i]);
-        //        }     
-        //    }            
-        //}
-        //public void Button_Click(object sender, EventArgs e)
-        //{
-
-        //    for (int i = 0; i < GTM.Items.Count(); i++)
+        //        SheerResponse.Alert("GTM Selected Value: Empty");
+        //    }
+        //    else
         //    {
-        //        if (GTM.SelectedItem.Value.Equals(GTM.Items[i].Value))
-        //        {
-        //            this.GTMEvents.Controls.Add(GTM.Items[i]);
-        //        }
+        //        SheerResponse.Alert("GTM Selected Value: " + this.GTM.SelectedItem.Header.ToString());
+        //        GTM.Action = "1";
+        //        GTMEvents.Action = "0";
         //    }
         //}
-
-        //public void clickme()
+        //public void GTMEvents_ClickItem()
         //{
-        //    for (int i = 0; i < GTM.Items.Count(); i++)
+        //    if (this.GTMEvents.Items.Count() < 1)
         //    {
-        //        if (GTM.SelectedItem.Value.Equals(GTM.Items[i].Value))
-        //        {
-                    
-        //            this.GTMEvents.Controls.Add(GTM.Items[i]);
-        //            if (string.IsNullOrEmpty(this.GTMEvents.Value))
-        //            {
-        //                this.GTMEvents.Value = gtmValueItem;
-        //            }
-        //            else
-        //            {
-        //                this.GTMEvents.Value += "," + gtmValueItem;
-
-        //            }
-        //        }
+        //        SheerResponse.Alert("GTMEvents Selected Value: Empty");
         //    }
-        //    //foreach (var yControlItem in this.GTMEvents.Items)
-        //    //{
-        //    //    this.GTM.Controls.Remove(yControlItem);
-        //    //}
+        //    else
+        //    {
+        //        SheerResponse.Alert("GTMEvents Selected Value: " + this.GTMEvents.SelectedItem.Header.ToString());
+        //        GTMEvents.Action = "1";
+        //        GTM.Action = "0";
+        //    }
         //}
-        public void GTM_ClickItem()
+        protected void TryLang()
         {
-            if(this.GTM.Items.Count() < 1)
-            {
-                SheerResponse.Alert("GTM Selected Value: Empty");
-            }
-            else
-            {
-                SheerResponse.Alert("GTM Selected Value: " + this.GTM.SelectedItem.Header.ToString());
-            }
-        }
-        public void GTMEvents_ClickItem()
-        {
-            if (this.GTMEvents.Items.Count() < 1)
-            {
-                SheerResponse.Alert("GTMEvents Selected Value: Empty");
-            }
-            else
-            {
-                SheerResponse.Alert("GTMEvents Selected Value: " + this.GTMEvents.SelectedItem.Header.ToString());
-            }
-        }
-        protected virtual void TryLang()
-        {
-           
-            if (GTMEvents.Items.Count() == 0)
-            {
-                GTMEvents.Value = string.Empty;
-            }
-            string gtmValueItem = this.GTM.SelectedItem.Value;
+            var requests = HttpContext.Current.Request.Cookies;
 
-            for (int ycounter = 0; ycounter < GTM.Items.Count(); ycounter++)
+            Listbox tempGTM = new Listbox();
+            foreach (var item in GTM.Items)
             {
+                tempGTM.Controls.Add(item);
+            }
 
-                if (gtmValueItem == this.GTM.Items[ycounter].Value)
+            foreach (var item in GTMEvents.Items)
+            {
+                tempGTM.Controls.Add(item);
+            }
+
+            if (!string.IsNullOrEmpty(requests["GTMEventsValue"].Value))
+            {
+                GTMEvents = new Listbox();
+                var gtmEventsValue = requests["GTMEventsValue"].Value.ToString();
+                var gtmEventsValueList = gtmEventsValue.Split(',').ToList();
+
+                foreach (var gtmItem in tempGTM.Items)
                 {
-                    SheerResponse.Alert("Add from events: " + this.GTM.Items[ycounter].Header);
-                    this.GTMEvents.Controls.Add(GTM.Items[ycounter]);
-                    if (string.IsNullOrEmpty(this.GTMEvents.Value))
+                    foreach (var eventValue in gtmEventsValueList)
                     {
-                        this.GTMEvents.Value = gtmValueItem;
-                    }
-                    else
-                    {
-                        this.GTMEvents.Value += "," + gtmValueItem;
+                        if (gtmItem.Value.Equals(eventValue))
+                        {
+                            GTMEvents.Controls.Add(gtmItem);
+                        }
                     }
                 }
             }
+            else
+            {
+                //if(!string.IsNullOrEmpty(GTMEvents.Value))
+                //{
+                //    var gtmEventsValue = GTMEvents.Value;
+                //    var eventList = gtmEventsValue.Split(',').ToList();
+
+                //    foreach (var eventVaue in eventList)
+                //    {
+                //        var eventItem = 
+                //    }
+                //}
+                var gtmEventsItems = GTMEvents.Items;
+                foreach (var itemEvent in gtmEventsItems)
+                {
+                    GTM.Controls.Add(itemEvent);
+                    GTMEvents.Controls.Remove(itemEvent);
+                }
+
+                GTMEvents.Value = string.Empty;
+            }
+
+            if (!string.IsNullOrEmpty(requests["GTMValue"].Value))
+            {
+                GTM = new Listbox();
+                var gtmEventsValue = requests["GTMValue"].Value.ToString();
+                var gtmEventsValueList = gtmEventsValue.Split(',').ToList();
+
+                foreach (var gtmItem in tempGTM.Items)
+                {
+                    foreach (var eventValue in gtmEventsValueList)
+                    {
+                        if (gtmItem.Value.Equals(eventValue))
+                        {
+                            GTM.Controls.Add(gtmItem);
+                        }
+                    }
+                }
+            }
+
+            //if (requests["GTMValue"] != null)
+            //{
+            //    var gtmEventsValue = requests["GTMEventsValue"].Value.ToString();
+            //    var gtmEventsValueList = gtmEventsValue.Split(',').ToList();
+            //}
+
+            foreach (var controlItem in GTMEvents.Items)
+            {
+                GTM.Controls.Remove(controlItem);
+            }
+
+            if (GTMEvents.Items.Count() > 0)
+            {
+                List<string> eventValues = new List<string>();
+                foreach (var gtmItemEvent in GTMEvents.Items)
+                {
+                    eventValues.Add(gtmItemEvent.Value);
+                }
+
+                GTMEvents.Value = string.Join(",", eventValues.ToArray());
+            }
+            else
+            {
+                GTMEvents.Value = string.Empty;
+            }
+
+            if (GTM.Items.Count() > 0)
+            {
+                List<string> eventValues = new List<string>();
+                foreach (var gtmItemEvent in GTM.Items)
+                {
+                    eventValues.Add(gtmItemEvent.Value);
+                }
+
+                GTM.Value = string.Join(",", eventValues.ToArray());
+            }
+            else
+            {
+                GTM.Value = string.Empty;
+            }
+
+            //if (GTMEvents.Items.Count() == 0)
+            //{
+            //    GTMEvents.Value = string.Empty;
+            //}
+            //string gtmValueItem = this.GTM.SelectedItem.Value;
+            //if(GTM.Action == "1")
+            //{ 
+            //    for (int ycounter = 0; ycounter < GTM.Items.Count(); ycounter++)
+            //    {
+
+            //        if (gtmValueItem == this.GTM.Items[ycounter].Value)
+            //        {
+            //            SheerResponse.Alert("Add from events: " + this.GTM.Items[ycounter].Header);
+            //            this.GTMEvents.Controls.Add(GTM.Items[ycounter]);
+            //            if (string.IsNullOrEmpty(this.GTMEvents.Value))
+            //            {
+            //                this.GTMEvents.Value = gtmValueItem;
+            //            }
+            //            else
+            //            {
+            //                this.GTMEvents.Value += "," + gtmValueItem;
+            //            }
+            //        }
+            //    }
+            //    foreach (var controlItem in this.GTMEvents.Items)
+            //    {
+            //        this.GTM.Controls.Remove(controlItem);
+            //    }
+            //}
 
         }
         protected virtual void TryLang2()
@@ -413,25 +492,30 @@ namespace Sitecore.Sbos.Module.LinkTracker.sitecore.shell.Applications.Dialogs.E
             }
 
             string gtmEventsValueItem = this.GTMEvents.SelectedItem.Value;
-
-            for (int xcounter = 0; xcounter < GTMEvents.Items.Count(); xcounter++)
-            {
-                SheerResponse.Alert("Remove form events:" + this.GTMEvents.Items[xcounter].Header);
-                if (gtmEventsValueItem == this.GTMEvents.Items[xcounter].Value)
+            if(GTMEvents.Action == "1")
+            { 
+                for (int xcounter = 0; xcounter < GTMEvents.Items.Count(); xcounter++)
                 {
-                    this.GTM.Controls.Add(GTMEvents.Items[xcounter]);
-                    if (string.IsNullOrEmpty(this.GTM.Value))
+                    SheerResponse.Alert("Remove form events:" + this.GTMEvents.Items[xcounter].Header);
+                    if (gtmEventsValueItem == this.GTMEvents.Items[xcounter].Value)
                     {
-                        this.GTM.Value = gtmEventsValueItem;
-                    }
-                    else
-                    {
-                        this.GTM.Value += "," + gtmEventsValueItem;
-                    }
+                        this.GTM.Controls.Add(GTMEvents.Items[xcounter]);
+                        if (string.IsNullOrEmpty(this.GTM.Value))
+                        {
+                            this.GTM.Value = gtmEventsValueItem;
+                        }
+                        else
+                        {
+                            this.GTM.Value += "," + gtmEventsValueItem;
+                        }
 
+                    }
+                }
+                foreach (var controlItem in this.GTM.Items)
+                {
+                    this.GTMEvents.Controls.Remove(controlItem);
                 }
             }
-
         }
 
         protected override void OnOK(object sender, EventArgs args)
@@ -449,14 +533,22 @@ namespace Sitecore.Sbos.Module.LinkTracker.sitecore.shell.Applications.Dialogs.E
             LinkForm.SetAttribute(packet, "class", this.Class);
             LinkForm.SetAttribute(packet, "target", attributeFromValue);
 
-            if(GTM.Items.Count() > 0)
-            {   
-                TryLang();
-            }
-            if(GTMEvents.Items.Count() > 0)
-            {
-                //TryLang2();
-            }
+            TryLang();
+
+            //if(GTM.Items.Count() > 0)
+            //{   
+            //    if(GTM.Action == "1")
+            //    { 
+            //        TryLang();
+            //    }
+            //}
+            //if(GTMEvents.Items.Count() > 0)
+            //{
+            //    if (GTMEvents.Action == "1")
+            //    {
+            //        TryLang2();
+            //    }
+            //}
 
             //GTM
             LinkForm.SetAttribute(packet, LinkTrackerConstants.GTMTriggerAttName, this.TriggerGTM);
