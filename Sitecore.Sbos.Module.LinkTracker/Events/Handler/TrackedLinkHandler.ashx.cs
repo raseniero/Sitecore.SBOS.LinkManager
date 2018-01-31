@@ -22,6 +22,8 @@ namespace Sitecore.Sbos.Module.LinkTracker.Events.Handler
             this.HandleQueryStringParameter(context, "triggerCampaign", "cid", "campaignData");
             this.HandleQueryStringParameter(context, "triggerGoal", "gid", "goalData");
             this.HandleQueryStringParameter(context, "triggerPageEvent", "peid", "pageEventData");
+            this.HandleQueryStringParameter(context, "triggerGTM", "gtmid", "gtmData");
+
         }
 
         private void HandleQueryStringParameter(HttpContext context, string triggerParam, string idParam, string dataParam)

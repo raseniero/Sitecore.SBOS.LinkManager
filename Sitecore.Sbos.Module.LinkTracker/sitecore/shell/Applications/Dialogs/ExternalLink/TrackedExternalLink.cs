@@ -41,7 +41,7 @@ namespace Sitecore.Sbos.Module.LinkTracker.sitecore.shell.Applications.Dialogs.E
 
         protected Listbox GTM;
 
-        protected Listbox GTMEvents;
+        public Listbox GTMEvents;
 
         protected Button TestGTM;
 

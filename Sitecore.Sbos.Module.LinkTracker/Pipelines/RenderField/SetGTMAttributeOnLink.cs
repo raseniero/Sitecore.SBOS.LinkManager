@@ -4,12 +4,16 @@ using Sitecore.Pipelines.RenderField;
 using Sitecore.Sbos.Module.LinkTracker.Data.Constants;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web;
+using Sitecore.Sbos.Module.LinkTracker.sitecore.shell.Applications.Dialogs.ExternalLink;
+using System.Net;
 
 namespace Sitecore.Sbos.Module.LinkTracker.Pipelines.RenderField
 {
     public class SetGTMAttributeOnLink : SetTrackedAttributeOnLink
     {
         List<Item> gtm = new List<Item>();
+        List<string> counter = new List<string>();
 
         public override void Process(RenderFieldArgs args)
         {
@@ -22,9 +26,9 @@ namespace Sitecore.Sbos.Module.LinkTracker.Pipelines.RenderField
 
             string shouldTriggerGTM;
 
-            if (!string.IsNullOrEmpty(this.GetXmlAttributeValue(args.FieldValue, LinkTrackerConstants.CampaignTriggerAttName)))
+            if (!string.IsNullOrEmpty(this.GetXmlAttributeValue(args.FieldValue, LinkTrackerConstants.GTMTriggerAttName)))
             {
-                shouldTriggerGTM = this.GetXmlAttributeValue(args.FieldValue, LinkTrackerConstants.CampaignTriggerAttName) == "1" ? "true" : "false";
+                shouldTriggerGTM = this.GetXmlAttributeValue(args.FieldValue, LinkTrackerConstants.GTMTriggerAttName) == "1" ? "true" : "false";
             }
             else
             {
@@ -33,7 +37,26 @@ namespace Sitecore.Sbos.Module.LinkTracker.Pipelines.RenderField
 
             if(shouldTriggerGTM == "true")
             {
-                args.Result.FirstPart = this.AddOrExtendAttributeValue(args.Result.FirstPart, "onclick", "triggerGTM('" + this.GetXmlAttributeValue(args.FieldValue, this.XmlAttributeName) + "', '" + shouldTriggerGTM + "', '" + this.GetXmlAttributeValue(args.FieldValue, LinkTrackerConstants.GTMEventAttName) + "',  '" + gtm[0].Fields["EventData"].ToString() + "');");
+                var gtmEventsValue = this.GetXmlAttributeValue(args.FieldValue, LinkTrackerConstants.GTMEventAttName);
+                string[] gtmEventsValueList = gtmEventsValue.Split(',');
+                for (int count = 0; count < gtmEventsValueList.Count(); count++)
+                {
+                    
+                    for (int x = 0; x < gtm.Count(); x++)
+                    {
+                        if (gtm[x].ID.ToString() == gtmEventsValueList[count].Trim())
+                        {
+                            string[] EventData = gtm[x].Fields["EventData"].ToString().Split('&');
+                            string[] EventCategory = WebUtility.UrlDecode(EventData[0].ToString()).Split('=');
+                            string[] EventAction = WebUtility.UrlDecode(EventData[1].ToString()).Split('=');
+                            string[] EventLabel = WebUtility.UrlDecode(EventData[2].ToString()).Split('=');
+                            string[] EventValue = WebUtility.UrlDecode(EventData[3].ToString()).Split('=');
+                            string[] EventAdditional = WebUtility.UrlDecode(EventData[4].ToString()).Split('=');
+
+                            args.Result.FirstPart = this.AddOrExtendAttributeValue(args.Result.FirstPart, "onclick", "dataLayer.push('" + gtmEventsValueList[count].Trim() + "', '" + shouldTriggerGTM + "', {'" + EventCategory[0] + "' : '" + EventCategory[1] + "'}, {'" + EventAction[0] + "' : '" + EventAction[1] + "'}, {'" + EventLabel[0] + "': '" + EventLabel[1] + "'}, {'" + EventValue[0] + "' : '" + EventValue[1] + "'}, {'" + EventAdditional[0] + "' : '" + EventAdditional[1] + "'});");
+                        }
+                    }
+                }
             }           
         }
         public void LoadGTM()

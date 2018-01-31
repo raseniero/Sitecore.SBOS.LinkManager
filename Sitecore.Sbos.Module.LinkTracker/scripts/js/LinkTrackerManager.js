@@ -46,3 +46,22 @@ function triggerPageEvent(pageEventId, shouldTriggerPageEvent, pageEventData) {
     });
 }
 
+
+function triggerGTM(gtmID, shouldTriggerGTM, gtmData) {
+    $.ajax({
+        url: "/Events/Handler/TrackedLinkHandler.ashx",
+        type: "GET",
+        data: { gtmid: gtmID, triggerGTM: shouldTriggerGTM, gtmData },
+        context: this,
+        success: function (data) {
+
+
+        },
+        error: function (data) {
+            alert("GTM is not been triggered", data);
+        }
+    });
+}
+
+
+
