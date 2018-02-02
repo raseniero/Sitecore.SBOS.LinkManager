@@ -16,6 +16,7 @@ namespace Sitecore.Sbos.Module.LinkTracker.Events.Processors
         {
             Assert.ArgumentNotNull(args, "args");
             ReloadControl();
+            ReloadGTM();
         }
         public List<Item> GetDefinitionItems(string path, string tempId)
         {
@@ -72,6 +73,42 @@ namespace Sitecore.Sbos.Module.LinkTracker.Events.Processors
                 }
             }
         }
+
+        public void ReloadGTM()
+        {
+            string webRooPath = this.GetWebRootPath("Sitecore.Sbos.Module.LinkTracker");
+
+            string PathElement = "/sitecore/system/Settings/Analytics/Page Events/Google Tag Manager";
+
+            string TempId = "{059CFBDF-49FC-4F14-A4E5-B63E1E1AFB1E}";
+
+
+            var ItemsOn = GetDefinitionItems(PathElement, TempId);
+
+            XmlDocument xdoc = new XmlDocument();
+            xdoc.Load(webRooPath + Data.Constants.LinkTrackerConstants.ExternalFormPath);
+            XmlNodeList nodeList = xdoc.GetElementsByTagName("Listbox");
+
+            XmlElement gtmElement = (XmlElement)nodeList[0];
+            gtmElement.IsEmpty = true;
+
+
+            foreach (var item in ItemsOn)
+            {
+                var itemName = item.DisplayName;
+                var itemId = item.ID;
+                XmlElement ListItem = xdoc.CreateElement("ListItem");
+
+                ListItem.SetAttribute("Value", itemId.ToString());
+                ListItem.SetAttribute("Header", itemName);
+                ListItem.RemoveAttribute("xmlns");
+
+                gtmElement.AppendChild(ListItem);
+
+            }
+            xdoc.Save(webRooPath + Data.Constants.LinkTrackerConstants.ExternalFormPath);
+        }
+
 
         private string GetWebRootPath(string assembly)
         {

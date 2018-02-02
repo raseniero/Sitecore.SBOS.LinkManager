@@ -7,6 +7,7 @@ using System.Linq;
 using System.Web;
 using Sitecore.Sbos.Module.LinkTracker.sitecore.shell.Applications.Dialogs.ExternalLink;
 using System.Net;
+using System.Collections.Specialized;
 
 namespace Sitecore.Sbos.Module.LinkTracker.Pipelines.RenderField
 {
@@ -44,16 +45,51 @@ namespace Sitecore.Sbos.Module.LinkTracker.Pipelines.RenderField
                     
                     for (int x = 0; x < gtm.Count(); x++)
                     {
+                        string[] EventData = gtm[x].Fields["EventData"].ToString().Split('&');
+                        string[] DataValue = new string[EventData.Count()];
+                        string InsertData, ConcatData = "";
+                        string DataLayer = "dataLayer.push({, 'event' : '" + gtm[x].Name + "'});";
+
+                        for (int nxt = 0; nxt < EventData.Count(); nxt++)
+                        {
+                            string[] Splitter = WebUtility.UrlDecode(EventData[nxt]).Split('=');
+
+                            if (Splitter.Count() == 1)
+                            {
+                                DataValue[nxt] = "'" + Splitter[0] + "' : '" + "'";
+                            }
+                            if (Splitter.Count() == 2)
+                            {
+                                DataValue[nxt] = "'" + Splitter[0] + "' : '" + Splitter[1] + "'";
+                            }
+
+                        }
+                        for (int value = 0; value < DataValue.Count(); value++)
+                        {
+                            if (DataValue[value] == DataValue[0])
+                            {
+                                ConcatData += DataValue[value];
+                            }
+                            else
+                            {
+                                ConcatData += ", " + DataValue[value];
+                            }
+                        }
+                        InsertData = DataLayer.Insert(16, ConcatData);
+
+                        //args.Result.FirstPart = this.AddOrExtendAttributeValue(args.Result.FirstPart, "onclick", InsertData);
                         if (gtm[x].ID.ToString() == gtmEventsValueList[count].Trim())
                         {
-                            string[] EventData = gtm[x].Fields["EventData"].ToString().Split('&');
-                            string[] EventCategory = WebUtility.UrlDecode(EventData[0].ToString()).Split('=');
-                            string[] EventAction = WebUtility.UrlDecode(EventData[1].ToString()).Split('=');
-                            string[] EventLabel = WebUtility.UrlDecode(EventData[2].ToString()).Split('=');
-                            string[] EventValue = WebUtility.UrlDecode(EventData[3].ToString()).Split('=');
-                            string[] EventAdditional = WebUtility.UrlDecode(EventData[4].ToString()).Split('=');
+                            args.Result.FirstPart = this.AddOrExtendAttributeValue(args.Result.FirstPart, "onclick", InsertData);
+                            //    string[] EventData = gtm[x].Fields["EventData"].ToString().Split('&');
+                            //    string[] EventCategory = WebUtility.UrlDecode(EventData[0].ToString()).Split('=');
+                            //    string[] EventAction = WebUtility.UrlDecode(EventData[1].ToString()).Split('=');
+                            //    string[] EventLabel = WebUtility.UrlDecode(EventData[2].ToString()).Split('=');
+                            //    string[] EventValue = WebUtility.UrlDecode(EventData[3].ToString()).Split('=');
+                            //    string[] EventAdditional = WebUtility.UrlDecode(EventData[4].ToString()).Split('=');
 
-                            args.Result.FirstPart = this.AddOrExtendAttributeValue(args.Result.FirstPart, "onclick", "dataLayer.push('" + gtmEventsValueList[count].Trim() + "', '" + shouldTriggerGTM + "', {'" + EventCategory[0] + "' : '" + EventCategory[1] + "'}, {'" + EventAction[0] + "' : '" + EventAction[1] + "'}, {'" + EventLabel[0] + "': '" + EventLabel[1] + "'}, {'" + EventValue[0] + "' : '" + EventValue[1] + "'}, {'" + EventAdditional[0] + "' : '" + EventAdditional[1] + "'});");
+                            //    //args.Result.FirstPart = this.AddOrExtendAttributeValue(args.Result.FirstPart, "onclick", "dataLayer.push({'" + gtmEventsValueList[count].Trim() + "', '" + shouldTriggerGTM + "', '" + EventCategory[0] + "' : '" + EventCategory[1] + "', '" + EventAction[0] + "' : '" + EventAction[1] + "', '" + EventLabel[0] + "': '" + EventLabel[1] + "', '" + EventValue[0] + "' : ' ', '" + EventAdditional[0] + "' : ' '});");
+                            //    args.Result.FirstPart = this.AddOrExtendAttributeValue(args.Result.FirstPart, "onclick", "dataLayer.push({'" + EventCategory[0] + "' : '" + EventCategory[1] + "', '" + EventAction[0] + "' : '" + EventAction[1] + "', '" + EventLabel[0] + "': '" + EventLabel[1] + "', '" + EventValue[0] + "' : ' ', '" + EventAdditional[0] + "' : ' '});");
                         }
                     }
                 }
