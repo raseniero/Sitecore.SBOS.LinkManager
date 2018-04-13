@@ -2,6 +2,7 @@
 using System.Xml;
 using Sitecore.Pipelines.RenderField;
 using Sitecore.Xml;
+using Sitecore.Sbos.Module.LinkTracker.Utils;
 
 namespace Sitecore.Sbos.Module.LinkTracker.Pipelines.RenderField
 {
@@ -17,14 +18,26 @@ namespace Sitecore.Sbos.Module.LinkTracker.Pipelines.RenderField
 
         protected virtual bool CanProcess(RenderFieldArgs args)
         {
-            return !string.IsNullOrWhiteSpace(this.AttributeName)
-                   && !string.IsNullOrWhiteSpace(this.BeginningHtml)
-                   && !string.IsNullOrWhiteSpace(this.XmlAttributeName)
-                   && args != null
-                   && args.Result != null
-                   && this.HasXmlAttributeValue(args.FieldValue, this.AttributeName)
-                   && !string.IsNullOrWhiteSpace(args.Result.FirstPart)
-                   && args.Result.FirstPart.ToLower().StartsWith(this.BeginningHtml.ToLower());
+
+            switch (args.FieldName)
+            {
+                case "Page Description":
+                case "Body":
+                case "Content":
+                case "Text":
+                    return false;
+               default:
+                    return !string.IsNullOrWhiteSpace(this.AttributeName)
+                           && !string.IsNullOrWhiteSpace(this.BeginningHtml)
+                           && !string.IsNullOrWhiteSpace(this.XmlAttributeName)
+                           && args != null
+                           && args.Result != null
+                           && this.HasXmlAttributeValue(args.FieldValue, this.AttributeName)
+                           && !string.IsNullOrWhiteSpace(args.Result.FirstPart)
+                           && args.Result.FirstPart.ToLower().StartsWith(this.BeginningHtml.ToLower());
+            }
+           
+          
         }
 
         protected virtual bool HasXmlAttributeValue(string linkXml, string attributeName)
@@ -34,7 +47,10 @@ namespace Sitecore.Sbos.Module.LinkTracker.Pipelines.RenderField
 
         protected virtual string GetXmlAttributeValue(string linkXml, string attributeName)
         {
-            XmlDocument xmlDocument = XmlUtil.LoadXml(linkXml);
+    
+            var xmlString = XmlStringConverter.RemoveInvalidXmlChars(linkXml);
+             
+            XmlDocument xmlDocument = XmlUtil.LoadXml(xmlString);
 
             XmlNode node = xmlDocument?.SelectSingleNode("/link");
             if (node == null)

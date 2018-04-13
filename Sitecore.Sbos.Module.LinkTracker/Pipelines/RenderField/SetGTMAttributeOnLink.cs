@@ -1,4 +1,5 @@
-﻿using Sitecore.Data;
+﻿using System;
+using Sitecore.Data;
 using Sitecore.Data.Items;
 using Sitecore.Pipelines.RenderField;
 using Sitecore.Sbos.Module.LinkTracker.Data.Constants;
@@ -8,6 +9,9 @@ using System.Web;
 using Sitecore.Sbos.Module.LinkTracker.sitecore.shell.Applications.Dialogs.ExternalLink;
 using System.Net;
 using System.Collections.Specialized;
+using System.Data;
+using Sitecore.Analytics.Pipelines.GetRenderingRules;
+using Sitecore.Shell.Applications.ContentEditor;
 
 namespace Sitecore.Sbos.Module.LinkTracker.Pipelines.RenderField
 {
@@ -26,6 +30,7 @@ namespace Sitecore.Sbos.Module.LinkTracker.Pipelines.RenderField
             }
 
             string shouldTriggerGTM;
+
 
             if (!string.IsNullOrEmpty(this.GetXmlAttributeValue(args.FieldValue, LinkTrackerConstants.GTMTriggerAttName)))
             {

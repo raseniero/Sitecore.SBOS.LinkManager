@@ -162,6 +162,7 @@
     <Compile Include="Pipelines\RenderLayout\InsertHeadControls.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="sitecore\shell\Applications\Dialogs\ExternalLink\TrackedExternalLink.cs" />
+    <Compile Include="Utils\XmlStringConverter.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Config\Include\Sitecore.Sbos.Module.LinkTracker.config">
